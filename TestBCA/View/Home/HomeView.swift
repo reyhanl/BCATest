@@ -17,7 +17,7 @@ struct HomeView: View{
                         let audio = vm.audios[index]
                         HStack{
                             AsyncImage(url: URL(string: audio.artworkUrl100 ?? "")).aspectRatio(contentMode: .fit).frame(width: 50, height: 50).clipShape(RoundedRectangle(cornerRadius: 10))
-                            Text("text")
+                            Text(audio.title).lineLimit(1)
                             Spacer()
                         }.contentShape(Rectangle()).onTapGesture {
                             vm.userClickRow(at: index)

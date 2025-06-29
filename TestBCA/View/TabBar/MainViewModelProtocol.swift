@@ -6,6 +6,6 @@
 //
 
 protocol MainViewModelProtocol{
-    var api: AudioPersistenceUsecase{get set}
+    var api: AudioAPIUseCaseProtocol{get set}
     var playerManager: AudioPlayerProtocol{get set}
 }

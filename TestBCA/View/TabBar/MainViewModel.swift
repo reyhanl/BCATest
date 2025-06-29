@@ -11,12 +11,12 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
     @Published var duration: Int = 10
     @Published var thumbnailImage: String = ""
     @Published var title: String = ""
-    var api: AudioPersistenceUsecase
+    var api: AudioAPIUseCaseProtocol
     @Published var playerManager: AudioPlayerProtocol
     @Published var audios: [Audio] = []
     @Published var audioPlayerStatus: AudioPlayerStatus = .noAudioIsSelected
     
-    init(api: AudioPersistenceUsecase, playerManager: AudioPlayerManager) {
+    init(api: AudioAPIUseCaseProtocol, playerManager: AudioPlayerManager) {
         self.api = api
         self.playerManager = playerManager
         super.init()
@@ -25,9 +25,13 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
     
     func viewDidLoad(){
         Task{
-            let audios = try await api.loadAudio(keyword: "")
-            await MainActor.run {
-                self.audios = audios
+            do{
+                let audios = try await api.loadAudio(keyword: "")
+                await MainActor.run {
+                    self.audios = audios
+                }
+            }catch{
+                print("error: \(String.init(describing: error))")
             }
         }
     }
