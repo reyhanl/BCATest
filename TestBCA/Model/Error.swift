@@ -9,4 +9,5 @@ enum CustomError: Error{
     case custom(String)
     case failedToLoadContext
     case failedToLoadEntity
+    case fileNotFound
 }

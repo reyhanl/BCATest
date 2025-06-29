@@ -29,14 +29,76 @@
 		FCB93B302E10DB1B007E806C /* TestBCAUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestBCAUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		FCB93BF72E1178DA007E806C /* Exceptions for "TestBCA" folder in "TestBCATests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				DummyJson.json,
+				Helper/Debouncer.swift,
+				Helper/JSONReader.swift,
+				Helper/Player/AudioPlayerManager.swift,
+				Helper/Player/PlayerProtocol.swift,
+				Model/Audio.swift,
+				Model/Error.swift,
+				Networking/API.swift,
+				Networking/AudioAPI/AudioAPI.swift,
+				Networking/AudioAPI/Protocol/AudioAPIProtocol.swift,
+				Networking/Executor.swift,
+				View/TabBar/MainViewModel.swift,
+				View/TabBar/MainViewModelProtocol.swift,
+			);
+			target = FCB93B252E10DB1B007E806C /* TestBCATests */;
+		};
+		FCB93C162E1199DD007E806C /* Exceptions for "TestBCA" folder in "TestBCA" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				DummyJson.json,
+			);
+			target = FCB93B142E10DB18007E806C /* TestBCA */;
+		};
+		FCB93C1E2E119E05007E806C /* Exceptions for "TestBCATests" folder in "TestBCA" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				DummyMainApiUsecase.swift,
+			);
+			target = FCB93B142E10DB18007E806C /* TestBCA */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		FCB93C172E1199DD007E806C /* Exceptions for "TestBCA" folder in "Compile Sources" phase from "TestBCA" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = FCB93B112E10DB18007E806C /* Sources */;
+			membershipExceptions = (
+				DummyJson.json,
+			);
+		};
+		FCB93C252E11A27C007E806C /* Exceptions for "TestBCATests" folder in "Compile Sources" phase from "TestBCATests" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = FCB93B222E10DB1B007E806C /* Sources */;
+			membershipExceptions = (
+				FourAudioJSON.json,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		FCB93B172E10DB18007E806C /* TestBCA */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				FCB93C162E1199DD007E806C /* Exceptions for "TestBCA" folder in "TestBCA" target */,
+				FCB93C172E1199DD007E806C /* Exceptions for "TestBCA" folder in "Compile Sources" phase from "TestBCA" target */,
+				FCB93BF72E1178DA007E806C /* Exceptions for "TestBCA" folder in "TestBCATests" target */,
+			);
 			path = TestBCA;
 			sourceTree = "<group>";
 		};
 		FCB93B292E10DB1B007E806C /* TestBCATests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				FCB93C1E2E119E05007E806C /* Exceptions for "TestBCATests" folder in "TestBCA" target */,
+				FCB93C252E11A27C007E806C /* Exceptions for "TestBCATests" folder in "Compile Sources" phase from "TestBCATests" target */,
+			);
 			path = TestBCATests;
 			sourceTree = "<group>";
 		};

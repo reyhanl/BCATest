@@ -18,6 +18,15 @@ struct Audio: Codable, Identifiable {
     let artworkUrl100: String?
     let previewUrl: String?
     
+    init(wrapperType: String, id: Int, title: String, artistName: String, artworkUrl100: String? = nil, previewUrl: String? = nil) {
+        self.wrapperType = .init(rawValue: wrapperType) ?? .audiobook
+        self.id = id
+        self.title = title
+        self.artistName = artistName
+        self.artworkUrl100 = artworkUrl100
+        self.previewUrl = previewUrl
+    }
+
     enum CodingKeys: String, CodingKey {
         case title = "trackName"
         case wrapperType

@@ -22,7 +22,7 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
     
     let debouncer: Debouncer = Debouncer(interval: 1)
     
-    init(api: AudioAPIUseCaseProtocol, playerManager: AudioPlayerManager) {
+    init(api: AudioAPIUseCaseProtocol, playerManager: AudioPlayerProtocol) {
         self.api = api
         self.playerManager = playerManager
         super.init()
@@ -33,18 +33,21 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
         self.isLoadingSearching = true
         Task{ [weak self] in
             guard let self = self else{return}
-            do{
-                let audios = try await api.loadAudio(keyword: "")
-                await MainActor.run {
-                    self.audios = audios
-                    self.isLoadingSearching = false
-                }
-            }catch{
-                await MainActor.run {
-                    self.isLoadingSearching = false
-                }
-                print("error: \(String.init(describing: error))")
+            let audios = try await fetchData()
+            await MainActor.run {
+                self.audios = audios
+                self.isLoadingSearching = false
             }
+        }
+    }
+    
+    func fetchData() async throws -> [Audio]{
+        do{
+            let audios = try await api.loadAudio(keyword: nil)
+            return audios
+        }catch{
+            print("error: \(String.init(describing: error))")
+            throw error
         }
     }
     
@@ -55,22 +58,25 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
     
     func searchTextValueChanged(to value: String){
         debouncer.debounce { [weak self] in
-            guard let self = self else{return}
-            self.isLoadingSearching = true
             Task{
-                do{
-                    let audios = try await self.api.loadAudio(keyword: value)
-                    await MainActor.run {
-                        self.audios = audios
-                        self.isLoadingSearching = false
-                    }
-                }catch{
-                    await MainActor.run {
-                        self.isLoadingSearching = false
-                    }
-                    print("error: \(String.init(describing: error))")
-                }
+                await self?.search(text: value)
             }
+        }
+    }
+    
+    func search(text: String) async{
+        self.isLoadingSearching = true
+        do{
+            let audios = try await self.api.loadAudio(keyword: text)
+            await MainActor.run {
+                self.audios = audios
+                self.isLoadingSearching = false
+            }
+        }catch{
+            await MainActor.run {
+                self.isLoadingSearching = false
+            }
+            print("error: \(String.init(describing: error))")
         }
     }
     

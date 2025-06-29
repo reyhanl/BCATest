@@ -18,9 +18,7 @@ class AudioRemotePersistence: AudioPersistenceProtocol{
         guard let request = APIEndpoint.getAudios(keyword: keyword ?? "").urlRequest else{
             throw CustomError.custom("Failed to load Audio from API")
         }
-        guard let (data, response) = await executor.execute(request: request) else{
-            throw CustomError.custom("Failed to load Audio from API")
-        }
+        let (data, response) = try await executor.execute(request: request)
         let decoder = JSONDecoder()
 #if DEBUG
         let jsonDictionary = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]

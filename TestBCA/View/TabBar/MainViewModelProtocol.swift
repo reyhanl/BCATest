@@ -31,4 +31,5 @@ protocol MainViewModelProtocol: ObservableObject{
     func userWantsToType()
     func userCancelTyping()
     func searchTextValueChanged(to value: String)
+    func search(text: String) async
 }

@@ -107,3 +107,68 @@ enum APIEndpoint: APIEndpointProtocol {
         return request
     }
 }
+
+enum DummyAPIEndpoint: APIEndpointProtocol {
+    
+    case getAudios(keyword: String)
+    
+    var method: HTTPMethod{
+        switch self {
+        case .getAudios:
+            return .get
+        }
+    }
+    
+    var path: String{
+        switch self {
+        case .getAudios:
+            "search"
+        }
+    }
+    
+    var baseURL: String{
+        return "https://dummyapi/"
+    }
+    
+    var headers: [String : String]{
+        switch self {
+        case .getAudios:
+            return [:]
+        }
+    }
+    
+    var urlParams: [String : any CustomStringConvertible]{
+        switch self {
+        case .getAudios(let keyword):
+            let str = """
+""
+"""
+            if keyword == ""{
+                return ["term":str]
+            }
+            return ["term":keyword]
+        }
+    }
+    
+    var body: Data?{
+        switch self {
+        case .getAudios:
+            return nil
+        }
+    }
+    
+    var urlRequest: URLRequest?{
+        guard let tempURL = URL(string: baseURL + path),
+              var components = URLComponents(string: tempURL.absoluteString)
+        else{return nil}
+        components.queryItems = urlParams.map({.init(name: $0.key, value: $0.value as? String ?? "")})
+        guard let url = components.url else{return nil}
+        var request = URLRequest(url: url)
+        request.httpMethod = method.value
+        for header in headers {
+            request.setValue(header.value, forHTTPHeaderField: header.key)
+        }
+        request.httpBody = body
+        return request
+    }
+}

@@ -1,0 +1,30 @@
+
+[
+  {
+    "wrapperType": "track",
+    "collectionId": 1001,
+    "trackName": "Peaceful Piano",
+    "collectionName": "Evening Melodies",
+    "artistName": "Calm Sounds",
+    "artworkUrl100": "https://example.com/images/piano.jpg",
+    "previewUrl": "https://example.com/audio/peaceful_piano.mp3"
+  },
+  {
+    "wrapperType": "audiobook",
+    "collectionId": 2001,
+    "trackName": "",
+    "collectionName": "The Art of Stillness",
+    "artistName": "Pico Iyer",
+    "artworkUrl100": "https://example.com/images/stillness.jpg",
+    "previewUrl": "https://example.com/audio/art_of_stillness_sample.mp3"
+  },
+  {
+    "wrapperType": "track",
+    "collectionId": 1002,
+    "trackName": "Lo-fi Chill",
+    "collectionName": "Lo-fi Beats",
+    "artistName": "Lo-Fi Producer",
+    "artworkUrl100": null,
+    "previewUrl": null
+  }
+]
