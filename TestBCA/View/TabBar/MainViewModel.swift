@@ -69,7 +69,11 @@ extension MainViewModel: AudioPlayerDelegate{
     }
     
     func status(status: AudioPlayerStatus) {
-        withAnimation {
+        if self.audioPlayerStatus == .noAudioIsSelected{
+            withAnimation {
+                self.audioPlayerStatus = status
+            }
+        }else{
             self.audioPlayerStatus = status
         }
 //        self.duration = Int(playerManager.player?.currentItem?.duration.seconds ?? 0)

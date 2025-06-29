@@ -25,7 +25,6 @@ class AudioPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
     func play() {
         if let player = player{
             player.play()
-            delegate?.status(status: .isPlaying)
         }
     }
     
@@ -68,7 +67,6 @@ class AudioPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
     
     func pause() {
         player?.pause()
-        delegate?.status(status: .isPaused)
     }
     
     func seek(to: Int) {
