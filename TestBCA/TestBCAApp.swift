@@ -11,7 +11,7 @@ import SwiftUI
 struct TestBCAApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView(vm: PlayerViewModel())
+            ContentView(vm: PlayerViewModel(api: AudioPersistenceUsecase(persistence: AudioRemotePersistence()), playerManager: AudioPlayerManager(loader: AudioLoader(), provider: AudioProvider(audios: []))))
         }
     }
 }

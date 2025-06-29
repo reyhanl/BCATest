@@ -28,7 +28,7 @@ struct ContentView: View {
             VStack{
                 VStack{
                     Spacer()
-                    PlayerView(value: $vm.value, duration: $vm.duration).padding(.bottom, safeAreaBottom)
+//                    PlayerView(value: $vm.value, duration: $vm.duration).padding(.bottom, safeAreaBottom)
                 }
             }.ignoresSafeArea()
         }
@@ -36,5 +36,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(vm: PlayerViewModel())
+    ContentView(vm: PlayerViewModel(api: AudioPersistenceUsecase(persistence: AudioRemotePersistence()), playerManager: AudioPlayerManager(loader: AudioLoader(), provider: AudioProvider(audios: []))))
 }

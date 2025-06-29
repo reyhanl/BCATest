@@ -17,11 +17,26 @@ struct AudioListView: View{
     }
 }
 
+protocol PlayerViewModelProtocol{
+    var api: AudioPersistenceUsecase{get set}
+    var playerManager: AudioPlayerManager{get set}
+}
+
 class PlayerViewModel: ObservableObject{
     @Published var value: Int = 0
     @Published var duration: Int = 10
+    var api: AudioPersistenceUsecase
+    var playerManager: AudioPlayerManager
     
-    init() {
+    init(api: AudioPersistenceUsecase, playerManager: AudioPlayerManager) {
+        self.api = api
+        self.playerManager = playerManager
+    }
+    
+    func viewDidLoad(){
+        Task{
+            let audios = try await api.loadAudio()
+        }
     }
 }
 
