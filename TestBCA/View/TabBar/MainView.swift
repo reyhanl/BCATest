@@ -21,7 +21,6 @@ struct MainView<T: MainViewModelProtocol>: View {
     var body: some View {
         ZStack{
             TabView(selection: $selectedMenu){
-                NavigationStack(root: {
                     ZStack{
                         GeometryReader{ geometry in
                             HomeView<T>()
@@ -30,9 +29,7 @@ struct MainView<T: MainViewModelProtocol>: View {
                                 safeAreaBottom = geometry.safeAreaInsets.bottom
                             }
                         }
-                    }
-
-                }).tabItem {
+                    }.tabItem {
                     Image(systemName: selectedMenu == .home ? "house.fill" : "house")
                     Text("Home")
                 }.tag(TabBarMenu.home)

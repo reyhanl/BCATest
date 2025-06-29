@@ -11,7 +11,7 @@ struct HomeView<T: MainViewModelProtocol>: View{
     @State var searchText: String = ""
     @FocusState private var isFocused: Bool
     var body: some View{
-        NavigationView {
+        NavigationStack {
             VStack{
                 HStack{
                     Image(systemName: "magnifyingglass").renderingMode(.template).tint(.secondary).foregroundStyle(.secondary)
