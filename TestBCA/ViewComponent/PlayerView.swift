@@ -20,6 +20,8 @@ struct PlayerView: View {
     @Binding var thumbnailImage: String
     @Binding var title: String
     @Binding var status: AudioPlayerStatus
+    @Binding var isPreviousSongAvailable: Bool
+    @Binding var isNextSongAvailable: Bool
     
     var actions: Action
     var body: some View {
@@ -29,13 +31,19 @@ struct PlayerView: View {
                     AsyncImage(url: URL(string: thumbnailImage)).aspectRatio(contentMode: .fit).frame(width: 50, height: 50).clipShape(RoundedRectangle(cornerRadius: 10))
                     Text(title).bold()
                     Spacer()
-                    makeButton(imageName: "chevron.backward").onTapGesture {
+                    makeButton(imageName: "chevron.backward")
+                        .opacity(isPreviousSongAvailable ? 1:0)
+                    .onTapGesture {
+                        guard isPreviousSongAvailable else{return}
                         actions.previous()
                     }
                     makeButton(imageName: status == .isPlaying ? "pause.fill":"play.fill").onTapGesture {
                         actions.playPause()
                     }
-                    makeButton(imageName: "chevron.right").onTapGesture {
+                    makeButton(imageName: "chevron.right")
+                        .opacity(isNextSongAvailable ? 1:0)
+                        .onTapGesture {
+                        guard isNextSongAvailable else{return}
                         actions.next()
                     }
                 }

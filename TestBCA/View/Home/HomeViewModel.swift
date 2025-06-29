@@ -80,7 +80,7 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
     
     func userClickRow(at: Int){
         let audio = audios[at]
-        playerManager.play(audio: audio, withPlaylist: audios)
+        playerManager.play(audio: audio, withPlaylist: .init(id: "-1", title: "home", audios: .init(audios: audios)))
     }
     
     func searchTextValueChanged(to value: String){

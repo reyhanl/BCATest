@@ -71,6 +71,12 @@ class PlaylistViewModel: ObservableObject, PlaylistViewModelProtocol {
             ]
         }
 
+    func userClickPlaylist(playlist: PlaylistModel){
+        guard let audio = playlist.audios.audios.first else{
+            return
+        }
+        playerManager.play(audio: audio, withPlaylist: playlist)
+    }
     
     func fetchPlaylists() async throws -> [PlaylistModel] {
         await MainActor.run{

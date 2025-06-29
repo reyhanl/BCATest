@@ -10,4 +10,6 @@ enum CustomError: Error{
     case failedToLoadContext
     case failedToLoadEntity
     case fileNotFound
+    case failedToGoToNextAudio
+    case failedToGoToPreviousAudio
 }

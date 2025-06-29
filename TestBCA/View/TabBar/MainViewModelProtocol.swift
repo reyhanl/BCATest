@@ -19,6 +19,8 @@ protocol MainViewModelProtocol: ObservableObject{
     var currentDuration: Int{get set}
     var duration: Int{get set}
     var isLoadingSearching: Bool{get set}
+    var isPreviousSongAvailable: Bool{get set}
+    var isNextSongAvailable: Bool{get set}
     
     func viewDidLoad()
     func playPause()

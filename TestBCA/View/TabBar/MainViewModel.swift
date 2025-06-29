@@ -12,6 +12,8 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
     @Published var thumbnailImage: String = ""
     @Published var title: String = ""
     @Published var isLoadingSearching: Bool = false
+    @Published var isPreviousSongAvailable: Bool = false
+    @Published var isNextSongAvailable: Bool = false
     var api: AudioAPIUseCaseProtocol
     @Published var playerManager: AudioPlayerProtocol
     @Published var audios: [Audio] = []
@@ -48,7 +50,7 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
     
     func userClickRow(at: Int){
         let audio = audios[at]
-        playerManager.play(audio: audio, withPlaylist: audios)
+        playerManager.play(audio: audio, withPlaylist: .init(id: "-1", title: "home", audios: .init(audios: audios)))
     }
     
     func searchTextValueChanged(to value: String){
@@ -87,11 +89,11 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
 //MARK: Playback Control
 extension MainViewModel{
     func next(){
-        playerManager.next()
+        try? playerManager.next()
     }
     
     func previous(){
-        playerManager.previous()
+        try? playerManager.previous()
     }
     
     func playPause(){
@@ -109,6 +111,21 @@ extension MainViewModel{
     func seek(to duration: Int) {
         playerManager.seek(to: duration)
     }
+    
+    func updatePlaybackButtonStatus(audio: Audio, playlist: PlaylistModel?){
+        if let playlist = playlist{
+            if let index = playlist.audios.audios.firstIndex(where: { $0.id == audio.id }){
+                isPreviousSongAvailable = index > 0
+                isNextSongAvailable = index < playlist.audios.audios.count - 1
+            }else{
+                isPreviousSongAvailable = false
+                isNextSongAvailable = false
+            }
+        }else{
+            isPreviousSongAvailable = false
+            isNextSongAvailable = false
+        }
+    }
 }
 
 extension MainViewModel: AudioNotificationManagerDelegate{
@@ -117,6 +134,7 @@ extension MainViewModel: AudioNotificationManagerDelegate{
             self.audio = audio
             self.thumbnailImage = audio.artworkUrl100 ?? ""
             self.title = audio.title
+            updatePlaybackButtonStatus(audio: audio, playlist: playerManager.playlist)
         }
     }
     
