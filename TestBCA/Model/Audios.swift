@@ -6,7 +6,7 @@
 //
 import Foundation
 
-@objc public class Audios: NSObject, NSCoding, Codable {
+public class Audios: NSObject, Codable {
     
     public var audios: [Audio] = []
 
