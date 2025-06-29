@@ -10,21 +10,25 @@ import SwiftUI
 struct PlaylistView<T: PlaylistViewModelProtocol>: View {
     @StateObject var vm: T
     var body: some View {
-        VStack{
+        NavigationStack{
             VStack{
-                ScrollView{
-                    ForEach(0..<vm.playlists.count, id: \.self){ index in
-                        let audio = vm.playlists[index]
-                        HStack{
-                            Text(audio.playlistName)
-                            Spacer()
-                            PlaylistThumbnailView(audios: $vm.playlists[index].audios)
-                        }.padding(.horizontal, 10)
+                VStack{
+                    ScrollView{
+                        ForEach(0..<vm.playlists.count, id: \.self){ index in
+                            let playlist = vm.playlists[index]
+                            HStack{
+                                Text(playlist.playlistName)
+                                Spacer()
+                                PlaylistThumbnailView(audios: $vm.playlists[index].audios)
+                            }.padding(.horizontal, 10).contentShape(Rectangle()).onTapGesture {
+                                vm.userClickPlaylist(playlist: playlist)
+                            }
+                        }
                     }
                 }
+            }.onAppear {
+                vm.viewDidLoad()
             }
-        }.onAppear {
-            vm.viewDidLoad()
         }
     }
 }

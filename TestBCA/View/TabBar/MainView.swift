@@ -55,6 +55,8 @@ struct MainView<T: MainViewModelProtocol>: View {
                         thumbnailImage: $vm.thumbnailImage,
                         title: $vm.title,
                         status: $vm.audioPlayerStatus,
+                        isPreviousSongAvailable: $vm.isPreviousSongAvailable,
+                        isNextSongAvailable: $vm.isNextSongAvailable,
                         actions: .init(next: {
                             vm.next()
                         }, playPause: {

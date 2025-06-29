@@ -8,7 +8,7 @@ import AVKit
 
 class AudioPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
     var currentAudio: Audio?
-    var playlist: [Audio] = []
+    var playlist: PlaylistModel?
     var player: AVPlayer?
     var value: Int?
     var duration: Int?
@@ -29,7 +29,7 @@ class AudioPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
         }
     }
     
-    func play(audio: Audio, withPlaylist: [Audio] = []) {
+    func play(audio: Audio, withPlaylist: PlaylistModel) {
         player?.pause()
         notificationManager.status(status: .isLoading)
         resetStatManually()
@@ -91,26 +91,33 @@ class AudioPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
         timer = nil
     }
     
-    func next(){
-        if let id = currentAudio?.id,
-           let index = playlist.firstIndex(where: {$0.id == id}),
-           index < playlist.count - 1
+    func next() throws{
+        if  let playlist = playlist,
+            let id = currentAudio?.id,
+           let index = playlist.audios.audios.firstIndex(where: {$0.id == id}),
+            index < playlist.audios.audios.count - 1
         {
             let tempIndex = index + 1
-            let audio = playlist[tempIndex]
+            let audio = playlist.audios.audios[tempIndex]
             play(audio: audio, withPlaylist: playlist)
+        }else{
+            throw CustomError.failedToGoToNextAudio
         }
     }
     
-    func previous() {
-        if let id = currentAudio?.id,
-           let index = playlist.firstIndex(where: {$0.id == id}),
+    func previous() throws{
+        if  let playlist = playlist,
+            let id = currentAudio?.id,
+           let index = playlist.audios.audios.firstIndex(where: {$0.id == id}),
            index > 0
         {
             let tempIndex = index - 1
-            let audio = playlist[tempIndex]
+            let audio = playlist.audios.audios[tempIndex]
             play(audio: audio, withPlaylist: playlist)
+        }else{
+            throw CustomError.failedToGoToPreviousAudio
         }
+        
     }
     
     func togglePlay() {
@@ -129,7 +136,7 @@ class AudioPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
         value = Int(player?.currentTime().seconds ?? 0)
         self.duration = Int(player?.currentItem?.duration.seconds ?? 0)
         if duration <= value ?? 0{
-            next()
+            try? next()
         }
     }
     

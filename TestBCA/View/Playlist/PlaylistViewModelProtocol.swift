@@ -17,5 +17,6 @@ protocol PlaylistViewModelProtocol: ObservableObject{
     var isLoadingPlaylist: Bool{get set}
     
     func viewDidLoad()
+    func userClickPlaylist(playlist: PlaylistModel)
     func fetchPlaylists() async throws -> [PlaylistModel]
 }
