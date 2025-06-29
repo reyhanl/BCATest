@@ -45,6 +45,16 @@ struct HomeView<T: HomeViewModelProtocol>: View{
                     generateContent()
                 }
             }
+//            .sheet(item: $vm.selectedAudioToAdd, content: {
+//                PlaylistModalView(playlists: $vm.playlists, actions: .init(addToPlaylist: { playlist in
+//                    
+//                }))
+//            })
+            .sheet(isPresented: $vm.shouldPresentPlaylistModal, content: {
+                PlaylistModalView(playlists: $vm.playlists, actions: .init(addToPlaylist: { playlist in
+                    vm.userChoosePlaylist(playlist: playlist)
+                }))
+            })
             .navigationBarTitleDisplayMode(.inline)
 //FIXME: Focus state wont ever change inside a toolbar, who knows why
 ///https://stackoverflow.com/questions/74245149/focusstate-textfield-not-working-within-toolbar-toolbaritem
@@ -202,7 +212,7 @@ struct HomeView<T: HomeViewModelProtocol>: View{
                         }
                         Image(systemName:"plus").resizable().frame(width: 20, height: 20).contentShape(Rectangle())
                             .onTapGesture(perform: {
-                                
+                                vm.userAddToPlaylist(audio: audio)
                             })
                     }
                     .padding(.horizontal, 10)

@@ -12,13 +12,15 @@ struct PlaylistView<T: PlaylistViewModelProtocol>: View {
     var body: some View {
         VStack{
             VStack{
-                ForEach(0..<vm.playlists.count, id: \.self){ index in
-                    let audio = vm.playlists[index]
-                    HStack{
-                        Text(audio.playlistName)
-                        Spacer()
-                        PlaylistThumbnailView(audios: $vm.playlists[index].audios)
-                    }.padding(.horizontal, 10)
+                ScrollView{
+                    ForEach(0..<vm.playlists.count, id: \.self){ index in
+                        let audio = vm.playlists[index]
+                        HStack{
+                            Text(audio.playlistName)
+                            Spacer()
+                            PlaylistThumbnailView(audios: $vm.playlists[index].audios)
+                        }.padding(.horizontal, 10)
+                    }
                 }
             }
         }.onAppear {

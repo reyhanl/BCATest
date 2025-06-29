@@ -6,6 +6,7 @@
 //
 
 class PlaylistPersistenceUsecase: PlaylistAPIUseCaseProtocol{
+    
     var persistence: PlaylistPersistenceProtocol
     
     init(persistence: PlaylistPersistenceProtocol) {
@@ -22,5 +23,17 @@ class PlaylistPersistenceUsecase: PlaylistAPIUseCaseProtocol{
     
     func savePlaylist(playlist: PlaylistModel) async throws {
         try await persistence.savePlaylist(playlist: playlist)
+    }
+    
+    func updatePlaylist(playlist: PlaylistModel) async throws {
+        try await persistence.updatePlaylist(playlist: playlist)
+    }
+    
+    func deletePlaylist(id: String) async throws {
+        try await persistence.deletePlaylist(id: id)
+    }
+    
+    func deleteAllPlaylist() async throws {
+        try await persistence.deleteAllPlaylist()
     }
 }

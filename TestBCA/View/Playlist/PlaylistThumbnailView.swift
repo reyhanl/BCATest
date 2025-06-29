@@ -10,10 +10,13 @@ struct PlaylistThumbnailView: View {
     @Binding var audios: Audios
     var body: some View {
         HStack{
-            ForEach(0..<audios.audios.count, id: \.self){ index in
-                let thumbnailImage = audios.audios[index].artworkUrl100 ?? ""
-                AsyncImage(url: URL(string: thumbnailImage)).aspectRatio(contentMode: .fit).frame(width: 50, height: 50).clipShape(RoundedRectangle(cornerRadius: 10)).offset(x: -CGFloat(index) * CGFloat(50) / CGFloat(2))
+            let count = min(3, audios.audios.count)
+            ForEach(0..<count, id: \.self){ index in
+                var audiosReversed = audios.audios
+                let thumbnailImage = audiosReversed[audios.audios.count - 1 - index].artworkUrl100 ?? ""
+                AsyncImage(url: URL(string: thumbnailImage)).aspectRatio(contentMode: .fit).frame(width: 50, height: 50).clipShape(RoundedRectangle(cornerRadius: 10)).offset(x: CGFloat(3 - index) * CGFloat(50) / CGFloat(2))
+                    .shadow(radius: 2)
             }
-        }
+        }.padding(.trailing, 25)
     }
 }

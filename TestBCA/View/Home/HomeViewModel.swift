@@ -12,6 +12,7 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
     @Published var currentDuration: Int = 0
     @Published var isLoadingSearching: Bool = false
     var api: AudioAPIUseCaseProtocol
+    var playlistAPI: PlaylistAPIUseCaseProtocol
     @Published var playerManager: AudioPlayerProtocol
     @Published var audios: [Audio] = []{
         didSet{
@@ -19,13 +20,18 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
         }
     }
     @Published var audio: Audio?
+    @Published var selectedAudioToAdd: Audio?
     @Published var audioPlayerStatus: AudioPlayerStatus = .noAudioIsSelected
     @Published var searchText: String = ""
+    @Published var shouldPresentPlaylistModal: Bool = false
+    
+    @Published var playlists: [PlaylistModel] = []
     
     let debouncer: Debouncer = Debouncer(interval: 1)
-    
-    init(api: AudioAPIUseCaseProtocol, playerManager: AudioPlayerProtocol) {
+
+    init(api: AudioAPIUseCaseProtocol, playlistAPI: PlaylistAPIUseCaseProtocol, playerManager: AudioPlayerProtocol) {
         self.api = api
+        self.playlistAPI = playlistAPI
         self.playerManager = playerManager
         super.init()
     }
@@ -34,8 +40,10 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
         addObserver()
         Task{
             let audios = try await fetchData()
+            let playlists = try await fetchPlaylists()
             await MainActor.run {
                 self.audios = audios
+                self.playlists = playlists
             }
         }
     }
@@ -54,6 +62,16 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
                 self.isLoadingSearching = false
             }
             return audios
+        }catch{
+            print("error: \(String.init(describing: error))")
+            throw error
+        }
+    }
+    
+    func fetchPlaylists() async throws -> [PlaylistModel]{
+        do{
+            let playlists = try await playlistAPI.loadAllPlaylist()
+            return playlists
         }catch{
             print("error: \(String.init(describing: error))")
             throw error
@@ -92,7 +110,22 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
     }
     
     func userAddToPlaylist(audio: Audio){
-        
+        shouldPresentPlaylistModal = true
+        selectedAudioToAdd = audio
+    }
+    
+    func userChoosePlaylist(playlist: PlaylistModel){
+        guard let audio = selectedAudioToAdd else{return}
+        playlist.audios.audios.append(audio)
+        selectedAudioToAdd = nil
+        Task{
+            try await playlistAPI.updatePlaylist(playlist: playlist)
+            let playlists = try await fetchPlaylists()
+            await MainActor.run {
+                self.playlists = playlists
+                self.shouldPresentPlaylistModal = false
+            }
+        }
     }
 }
 
