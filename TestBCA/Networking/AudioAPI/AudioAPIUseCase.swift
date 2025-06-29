@@ -13,7 +13,7 @@ class AudioPersistenceUsecase: AudioAPIUseCaseProtocol{
         self.persistence = persistence
     }
     
-    func loadAudio() async throws -> [Audio] {
-        try await persistence.loadAudio()
+    func loadAudio(keyword: String?) async throws -> [Audio]{
+        try await persistence.loadAudio(keyword: keyword)
     }
 }

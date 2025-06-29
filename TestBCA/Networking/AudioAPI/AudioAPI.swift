@@ -14,15 +14,20 @@ class AudioRemotePersistence: AudioPersistenceProtocol{
         self.executor = executor
     }
     
-    func loadAudio() async throws -> [Audio]{
-        guard let request = APIEndpoint.getAudios.urlRequest else{
+    func loadAudio(keyword: String?) async throws -> [Audio]{
+        guard let request = APIEndpoint.getAudios(keyword: keyword ?? "").urlRequest else{
             throw CustomError.custom("Failed to load Audio from API")
         }
         guard let (data, response) = await executor.execute(request: request) else{
             throw CustomError.custom("Failed to load Audio from API")
         }
         let decoder = JSONDecoder()
-        return try decoder.decode([Audio].self, from: data)
+#if DEBUG
+        let jsonDictionary = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+        print("json: \(jsonDictionary)")
+#endif
+        let res = try decoder.decode(AudioResponse.self, from: data)
+        return res.results
     }
 }
 
@@ -31,7 +36,7 @@ class AudioLocalPersistence: AudioPersistenceProtocol{
     init() {
     }
     
-    func loadAudio() async throws -> [Audio]{
+    func loadAudio(keyword: String?) async throws -> [Audio] {
         //TODO: Implement local storage if necessary
         return []
     }

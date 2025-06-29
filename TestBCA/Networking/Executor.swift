@@ -13,7 +13,11 @@ protocol APIExecutorProtocol{
 
 class Executor: APIExecutorProtocol{
     func execute(request: URLRequest) async -> (Data, URLResponse)? {
+        
         do{
+#if DEBUG
+            print("request: \(request.url?.absoluteString)")
+#endif
             return try await URLSession.shared.data(for: request)
         }catch{
             print("error: \(error.localizedDescription)")

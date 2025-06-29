@@ -9,10 +9,10 @@ import Foundation
 protocol AudioAPIUseCaseProtocol{
     var persistence: AudioPersistenceProtocol{get set}
     
-    func loadAudio() async throws -> [Audio]
+    func loadAudio(keyword: String?) async throws -> [Audio]
 }
 
 protocol AudioPersistenceProtocol{    
-    func loadAudio() async throws -> [Audio]
+    func loadAudio(keyword: String?) async throws -> [Audio]
 }
 

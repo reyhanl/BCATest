@@ -45,7 +45,7 @@ enum HTTPMethod{
 
 enum APIEndpoint: APIEndpointProtocol {
     
-    case getAudios
+    case getAudios(keyword: String)
     
     var method: HTTPMethod{
         switch self {
@@ -57,12 +57,12 @@ enum APIEndpoint: APIEndpointProtocol {
     var path: String{
         switch self {
         case .getAudios:
-            ""
+            "search"
         }
     }
     
     var baseURL: String{
-        return ""
+        return "https://itunes.apple.com/"
     }
     
     var headers: [String : String]{
@@ -74,8 +74,14 @@ enum APIEndpoint: APIEndpointProtocol {
     
     var urlParams: [String : any CustomStringConvertible]{
         switch self {
-        case .getAudios:
-            return [:]
+        case .getAudios(let keyword):
+            let str = """
+""
+"""
+            if keyword == ""{
+                return ["term":str]
+            }
+            return ["term":keyword]
         }
     }
     
@@ -87,7 +93,11 @@ enum APIEndpoint: APIEndpointProtocol {
     }
     
     var urlRequest: URLRequest?{
-        guard let url = URL(string: baseURL + path) else{return nil}
+        guard let tempURL = URL(string: baseURL + path),
+              var components = URLComponents(string: tempURL.absoluteString)
+        else{return nil}
+        components.queryItems = urlParams.map({.init(name: $0.key, value: $0.value as? String ?? "")})
+        guard let url = components.url else{return nil}
         var request = URLRequest(url: url)
         request.httpMethod = method.value
         for header in headers {

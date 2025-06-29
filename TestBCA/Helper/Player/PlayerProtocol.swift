@@ -14,12 +14,24 @@ protocol AudioPlayerProtocol: NSObject{
     func play()
     func play(audio: Audio, withPlaylist: [Audio])
     func pause()
+    func next()
+    func previous()
+    func togglePlay()
     func seek(to: Int)
 }
 
 protocol AudioPlayerDelegate: NSObject{
-    func updateDuration(currentValue: Int)
-    func status(isPlaying: Bool)
+    func didChangeAudio(audio: Audio)
+    func updateTime(currentPlaybackTime: Int, totalDuration: Int)
+    func status(status: AudioPlayerStatus)
+}
+
+enum AudioPlayerStatus{
+    case isLoading
+    case failedToLoad
+    case noAudioIsSelected
+    case isPlaying
+    case isPaused
 }
 
 protocol AudioLoaderProtocol{
