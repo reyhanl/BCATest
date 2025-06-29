@@ -96,6 +96,18 @@ extension MainViewModel{
     func playPause(){
         playerManager.togglePlay()
     }
+    
+    func pause(){
+        playerManager.pause()
+    }
+    
+    func play(){
+        playerManager.play()
+    }
+    
+    func seek(to duration: Int) {
+        playerManager.seek(to: duration)
+    }
 }
 
 extension MainViewModel: AudioPlayerDelegate{

@@ -70,7 +70,8 @@ class AudioPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
     }
     
     func seek(to: Int) {
-        
+        player?.seek(to: CMTime(seconds: Double(to), preferredTimescale: 1000))
+        player?.play()
     }
     
     private func resetStatManually(){

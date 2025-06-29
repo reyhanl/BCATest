@@ -22,8 +22,11 @@ protocol MainViewModelProtocol: ObservableObject{
     
     func viewDidLoad()
     func playPause()
+    func pause()
+    func play()
     func next()
     func previous()
+    func seek(to duration: Int)
     func userClickRow(at: Int)
     func userWantsToType()
     func userCancelTyping()

@@ -52,10 +52,14 @@ struct MainView<T: MainViewModelProtocol>: View {
                             vm.next()
                         }, playPause: {
                             vm.playPause()
+                        }, play: {
+                            vm.play()
+                        }, pause: {
+                            vm.pause()
                         }, previous: {
                             vm.previous()
-                        }, seek: { _ in
-                            
+                        }, seek: { time in
+                            vm.seek(to: time)
                         })
                     )
                         .frame(height: 50)

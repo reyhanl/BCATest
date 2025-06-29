@@ -10,6 +10,8 @@ struct PlayerView: View {
     struct Action{
         var next: () -> Void
         var playPause: () -> Void
+        var play: () -> Void
+        var pause: () -> Void
         var previous: () -> Void
         var seek: (Int) -> Void
     }
@@ -42,7 +44,13 @@ struct PlayerView: View {
                 if status != .isLoading && status != .failedToLoad{
                     HStack{
                         Text(value.durationStr)
-                        SliderView(value: $value, duration: $duration).frame(height: 10)
+                        SliderView(value: $value, duration: $duration, actions: .init(seek: { value in
+                            actions.seek(value)
+                        }, play: {
+                            actions.play()
+                        }, pause: {
+                            actions.pause()
+                        })).frame(height: 10)
                         Text(duration.durationStr)
                     }
                     .padding(.bottom, 5)
