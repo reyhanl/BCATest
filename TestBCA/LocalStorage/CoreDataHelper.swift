@@ -9,9 +9,10 @@ import CoreData
 protocol CoreDataHelperProtocol{
     var stack: CoreDataStack{get set}
     func save<T: Codable>(entity: String, object: T) throws
+    func replace<T: Codable>(entity: String, predicate: NSPredicate, object: T) throws
     func get(entityName: String, predicate: NSPredicate?) throws -> [NSManagedObject]
     func getGeneric<T: Codable>(entityName: String, predicate: NSPredicate?) throws -> [T]
-    func delete(entity: String, predicate: NSPredicate, deleteAll: Bool) throws
+    func delete(entity: String, predicate: NSPredicate?, deleteAll: Bool) throws
 }
 
 struct CoreDataStack{
@@ -46,6 +47,7 @@ struct CoreDataStack{
 }
 
 struct CoreDataHelper: CoreDataHelperProtocol{
+    
     
     var stack: CoreDataStack
     
@@ -82,7 +84,6 @@ struct CoreDataHelper: CoreDataHelperProtocol{
         guard let entity =  NSEntityDescription.entity(forEntityName: entityName, in: context) else{
             throw CustomError.failedToLoadEntity
         }
-        let newData = NSManagedObject(entity: entity, insertInto: context)
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         if let predicate = predicate{
             request.predicate = predicate
@@ -131,18 +132,30 @@ struct CoreDataHelper: CoreDataHelperProtocol{
         return data
     }
     
-    func delete(entity: String, predicate: NSPredicate, deleteAll: Bool = false) throws{
+    func delete(entity: String, predicate: NSPredicate?, deleteAll: Bool = false) throws{
         guard let context = stack.context else{
             throw CustomError.failedToLoadContext
         }
 
-        let objects = try get(entityName: entity)
+        let objects = try get(entityName: entity, predicate: predicate)
         for index in 0..<objects.count {
             let object = objects[index]
             context.delete(object)
-            if index == 0 && deleteAll{
+            if index == 0 && !deleteAll{
                 break
             }
+        }
+        try context.save()
+    }
+    
+    func replace<T>(entity: String, predicate: NSPredicate, object: T) throws where T : Decodable, T : Encodable {
+        guard let context = stack.context else{
+            throw CustomError.failedToLoadContext
+        }
+        let objects = try get(entityName: entity, predicate: predicate)
+        if let tempObject = objects.first{
+            context.delete(tempObject)
+            try save(entity: entity, object: object)
         }
         try context.save()
     }

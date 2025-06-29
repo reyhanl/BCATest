@@ -20,13 +20,16 @@ struct MainView<T: MainViewModelProtocol>: View {
     @State var selectedMenu: TabBarMenu = .home
     var body: some View {
         ZStack{
+            let helper = CoreDataHelper(stack: .init(name: "Data"))
             TabView(selection: $selectedMenu){
                     ZStack{
                         GeometryReader{ geometry in
                             HomeView(
                                 vm: HomeViewModel(
                                     api: AudioPersistenceUsecase(persistence: AudioRemotePersistence()),
-                                    playerManager: vm.playerManager                                    )
+                                    playlistAPI: PlaylistPersistenceUsecase(persistence: PlaylistLocalPersistence(helper: helper, entityName: "Playlist")),
+                                    playerManager: vm.playerManager
+                                )
                             )
                                 .frame(width: geometry.size.width, height: geometry.size.height)
                                 .onAppear {
@@ -37,7 +40,6 @@ struct MainView<T: MainViewModelProtocol>: View {
                         Image(systemName: selectedMenu == .home ? "house.fill" : "house")
                         Text("Home")
                     }.tag(TabBarMenu.home)
-                let helper = CoreDataHelper(stack: .init(name: "Data"))
                 PlaylistView(vm: PlaylistViewModel(api: PlaylistPersistenceUsecase(persistence: PlaylistLocalPersistence(helper: helper, entityName: "Playlist")), playerManager: vm.playerManager))
                     .tabItem {
                         Image(systemName: selectedMenu == .home ? "list.bullet.clipboard.fill" : "list.bullet.clipboard")
