@@ -14,22 +14,25 @@ enum TabBarMenu{
     case playlist
 }
 
-struct MainView: View {
-    @ObservedObject var vm: MainViewModel
+struct MainView<T: MainViewModelProtocol>: View {
+    @ObservedObject var vm: T
     @State var safeAreaBottom: CGFloat = 0
     @State var selectedMenu: TabBarMenu = .home
     var body: some View {
         ZStack{
             TabView(selection: $selectedMenu){
-                ZStack{
-                    GeometryReader{ geometry in
-                        HomeView()
-                            .environmentObject(vm)
-                            .frame(width: geometry.size.width, height: geometry.size.height).onAppear {
-                            safeAreaBottom = geometry.safeAreaInsets.bottom
+                NavigationStack(root: {
+                    ZStack{
+                        GeometryReader{ geometry in
+                            HomeView<T>()
+                                .environmentObject(vm)
+                                .frame(width: geometry.size.width, height: geometry.size.height).onAppear {
+                                safeAreaBottom = geometry.safeAreaInsets.bottom
+                            }
                         }
                     }
-                }.tabItem {
+
+                }).tabItem {
                     Image(systemName: selectedMenu == .home ? "house.fill" : "house")
                     Text("Home")
                 }.tag(TabBarMenu.home)
@@ -43,7 +46,7 @@ struct MainView: View {
                 Spacer()
                 if vm.audioPlayerStatus != .noAudioIsSelected{
                     PlayerView(
-                        value: $vm.value,
+                        value: $vm.currentDuration,
                         duration: $vm.duration,
                         thumbnailImage: $vm.thumbnailImage,
                         title: $vm.title,

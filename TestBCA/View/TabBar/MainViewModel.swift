@@ -7,7 +7,7 @@
 import SwiftUI
 
 class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{    
-    @Published var value: Int = 0
+    @Published var currentDuration: Int = 0
     @Published var duration: Int = 10
     @Published var thumbnailImage: String = ""
     @Published var title: String = ""
@@ -15,6 +15,8 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
     @Published var playerManager: AudioPlayerProtocol
     @Published var audios: [Audio] = []
     @Published var audioPlayerStatus: AudioPlayerStatus = .noAudioIsSelected
+    
+    @Published var searchText: String = ""
     
     init(api: AudioAPIUseCaseProtocol, playerManager: AudioPlayerManager) {
         self.api = api
@@ -64,7 +66,7 @@ extension MainViewModel: AudioPlayerDelegate{
     }
     
     func updateTime(currentPlaybackTime: Int, totalDuration: Int) {
-        self.value = currentPlaybackTime
+        self.currentDuration = currentPlaybackTime
         self.duration = totalDuration
     }
     
