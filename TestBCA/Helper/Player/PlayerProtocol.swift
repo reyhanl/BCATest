@@ -10,7 +10,7 @@ import AVKit
 protocol AudioPlayerProtocol: NSObject{
     var value: Int? { get set }
     var duration: Int?{get set}
-    var delegate: AudioPlayerDelegate?{get set}
+    var notificationManager: AudioPlayerNotificationManagerProtocol{get set}
     func play()
     func play(audio: Audio, withPlaylist: [Audio])
     func pause()
