@@ -46,7 +46,6 @@ struct HomeView<T: HomeViewModelProtocol>: View{
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            
 //FIXME: Focus state wont ever change inside a toolbar, who knows why
 ///https://stackoverflow.com/questions/74245149/focusstate-textfield-not-working-within-toolbar-toolbaritem
 //            .toolbar{
@@ -179,25 +178,37 @@ struct HomeView<T: HomeViewModelProtocol>: View{
     
     @ViewBuilder
     func generateRowView() -> some View{
-        ScrollView{
-            ForEach(0..<vm.audios.count, id: \.self){ index in
-                let audio = vm.audios[index]
-                HStack{
-                    AsyncImage(url: URL(string: audio.artworkUrl100 ?? "")).aspectRatio(contentMode: .fit).frame(width: 50, height: 50).clipShape(RoundedRectangle(cornerRadius: 10))
-                    Text(audio.title)
-                        .lineLimit(1)
-                    Spacer()
-                    if vm.audio?.id == audio.id{
-                        Image(systemName: "waveform.path")
-                    
+        GeometryReader{ geometry in
+            ScrollView{
+                ForEach(0..<vm.audios.count, id: \.self){ index in
+                    let audio = vm.audios[index]
+                    HStack{
+                        HStack{
+                            AsyncImage(url: URL(string: audio.artworkUrl100 ?? "")).aspectRatio(contentMode: .fit).frame(width: 50, height: 50).clipShape(RoundedRectangle(cornerRadius: 10))
+                            HStack{
+                                Text(audio.title)
+                                    .lineLimit(1)
+                                Spacer()
+                            }
+                            .frame(width: geometry.size.width * 0.7)
+                        }
+                        .contentShape(Rectangle()).onTapGesture {
+                            vm.userClickRow(at: index)
+                        }
+                        Spacer()
+                        if vm.audio?.id == audio.id{
+                            Image(systemName: "waveform.path")
+                        
+                        }
+                        Image(systemName:"plus").resizable().frame(width: 20, height: 20).contentShape(Rectangle())
+                            .onTapGesture(perform: {
+                                
+                            })
                     }
+                    .padding(.horizontal, 10)
                 }
-                .padding(.horizontal, 10)
-                .contentShape(Rectangle()).onTapGesture {
-                    vm.userClickRow(at: index)
-                }
-            }
-            Spacer()
+                Spacer()
+            }.frame(width: geometry.size.width, height: geometry.size.height)
         }
     }
 }

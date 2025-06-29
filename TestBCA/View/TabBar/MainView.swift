@@ -37,7 +37,8 @@ struct MainView<T: MainViewModelProtocol>: View {
                         Image(systemName: selectedMenu == .home ? "house.fill" : "house")
                         Text("Home")
                     }.tag(TabBarMenu.home)
-                PlaylistView()
+                let helper = CoreDataHelper(stack: .init(name: "Data"))
+                PlaylistView(vm: PlaylistViewModel(api: PlaylistPersistenceUsecase(persistence: PlaylistLocalPersistence(helper: helper, entityName: "Playlist")), playerManager: vm.playerManager))
                     .tabItem {
                         Image(systemName: selectedMenu == .home ? "list.bullet.clipboard.fill" : "list.bullet.clipboard")
                         Text("Playlists")

@@ -5,4 +5,9 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="Playlist" representedClassName="Playlist" syncable="YES" codeGenerationType="class">
+        <attribute name="audios" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer" customClassName="Audios"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="playlistName" optional="YES" attributeType="String"/>
+    </entity>
 </model>

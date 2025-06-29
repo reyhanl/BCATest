@@ -5,14 +5,53 @@
 //  Created by reyhan muhammad on 2025/6/29.
 //
 
+import Foundation
+
 struct AudioResponse: Codable {
     let resultCount: Int
     let results: [Audio]
 }
 
-struct Audio: Codable, Identifiable {
+public class Audio: Codable, NSCoding, Identifiable {
+    public func encode(with coder: NSCoder) {
+        coder.encode(wrapperType.rawValue, forKey: CodingKeys.wrapperType.rawValue)
+        switch wrapperType {
+        case .audiobook:
+            coder.encode(title, forKey: CodingKeys.collectionName.rawValue)
+        case .song:
+            coder.encode(title, forKey: CodingKeys.title.rawValue)
+        }
+        coder.encode(id, forKey: CodingKeys.collectionId.rawValue)
+        coder.encode(artistName, forKey: CodingKeys.artistName.rawValue)
+        coder.encode(artworkUrl100, forKey: CodingKeys.artworkUrl100.rawValue)
+        coder.encode(previewUrl, forKey: CodingKeys.previewUrl.rawValue)
+    }
+    
+    public required init?(coder: NSCoder) {
+        // Decode wrapperType safely
+        guard let wrapperString = coder.decodeObject(forKey: CodingKeys.wrapperType.rawValue) as? String,
+              let wrapper = AudioType(rawValue: wrapperString)
+        else {
+            return nil
+        }
+        self.wrapperType = wrapper
+
+        self.id = coder.decodeInteger(forKey: CodingKeys.collectionId.rawValue)
+        self.artistName = coder.decodeObject(forKey: CodingKeys.artistName.rawValue) as? String ?? ""
+
+        switch wrapper {
+        case .audiobook:
+            self.title = coder.decodeObject(forKey: CodingKeys.collectionName.rawValue) as? String ?? ""
+        case .song:
+            self.title = coder.decodeObject(forKey: CodingKeys.title.rawValue) as? String ?? ""
+        }
+
+        self.artworkUrl100 = coder.decodeObject(forKey: CodingKeys.artworkUrl100.rawValue) as? String
+        self.previewUrl = coder.decodeObject(forKey: CodingKeys.previewUrl.rawValue) as? String
+    }
+    
     let wrapperType: AudioType
-    let id: Int // using collectionId
+    public let id: Int // using collectionId
     let title: String // using collectionName
     let artistName: String
     let artworkUrl100: String?
@@ -37,7 +76,7 @@ struct Audio: Codable, Identifiable {
         case previewUrl
     }
     
-    init(from decoder: any Decoder) throws {
+    required public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let wrapper = try container.decode(String.self, forKey: .wrapperType)
         self.wrapperType = AudioType(rawValue: wrapper) ?? .song
@@ -57,7 +96,7 @@ struct Audio: Codable, Identifiable {
         self.previewUrl = try container.decodeIfPresent(String.self, forKey: .previewUrl)
     }
     
-    func encode(to encoder: any Encoder) throws {
+    public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(wrapperType.rawValue, forKey: .wrapperType)
         switch wrapperType {

@@ -9,8 +9,8 @@ import CoreData
 protocol CoreDataHelperProtocol{
     var stack: CoreDataStack{get set}
     func save<T: Codable>(entity: String, object: T) throws
-    func get(entityName: String, predicate: NSPredicate?) throws -> [NSManagedObject]?
-    func getGeneric<T: Codable>(entityName: String, predicate: NSPredicate?) throws -> [T]?
+    func get(entityName: String, predicate: NSPredicate?) throws -> [NSManagedObject]
+    func getGeneric<T: Codable>(entityName: String, predicate: NSPredicate?) throws -> [T]
     func delete(entity: String, predicate: NSPredicate, deleteAll: Bool) throws
 }
 
@@ -70,13 +70,12 @@ struct CoreDataHelper: CoreDataHelperProtocol{
         let keys = Set(entity.attributesByName.keys)
         guard let filteredDict = dict?.filter({ keys.contains($0.key) }) else{
             throw CustomError.custom("")
-            return
         }
         newData.setValuesForKeys(filteredDict)
         try context.save()
     }
     
-    func get(entityName: String, predicate: NSPredicate? = nil) throws -> [NSManagedObject]?{
+    func get(entityName: String, predicate: NSPredicate? = nil) throws -> [NSManagedObject]{
         guard let context = stack.context else{
             throw CustomError.failedToLoadContext
         }
@@ -91,10 +90,13 @@ struct CoreDataHelper: CoreDataHelperProtocol{
         request.returnsObjectsAsFaults = false
         
         let result = try context.fetch(request)
-        return result as? [NSManagedObject]
+        guard let result = result as? [NSManagedObject] else{
+            throw CustomError.custom("Failed to get Data")
+        }
+        return result
     }
 
-    func getGeneric<T: Codable>(entityName: String, predicate: NSPredicate? = nil) throws -> [T]?{
+    func getGeneric<T: Codable>(entityName: String, predicate: NSPredicate? = nil) throws -> [T]{
         guard let context = stack.context else{
             throw CustomError.failedToLoadContext
         }
@@ -134,10 +136,7 @@ struct CoreDataHelper: CoreDataHelperProtocol{
             throw CustomError.failedToLoadContext
         }
 
-        guard let objects = try get(entityName: entity) else{
-            throw CustomError.custom("No Data to Delete")
-        }
-        
+        let objects = try get(entityName: entity)
         for index in 0..<objects.count {
             let object = objects[index]
             context.delete(object)

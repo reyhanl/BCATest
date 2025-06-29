@@ -90,6 +90,10 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
             print("error: \(String.init(describing: error))")
         }
     }
+    
+    func userAddToPlaylist(audio: Audio){
+        
+    }
 }
 
 extension HomeViewModel: AudioNotificationManagerDelegate{
