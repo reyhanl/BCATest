@@ -19,4 +19,5 @@ protocol HomeViewModelProtocol: ObservableObject{
     func userClickRow(at: Int)
     func searchTextValueChanged(to value: String)
     func search(text: String) async
+    func userAddToPlaylist(audio: Audio)
 }
