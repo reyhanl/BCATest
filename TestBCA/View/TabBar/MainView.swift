@@ -18,9 +18,9 @@ struct MainView<T: MainViewModelProtocol>: View {
     @ObservedObject var vm: T
     @State var safeAreaBottom: CGFloat = 0
     @State var selectedMenu: TabBarMenu = .home
+    let helper = CoreDataHelper(stack: .init(name: "Data"))
     var body: some View {
         ZStack{
-            let helper = CoreDataHelper(stack: .init(name: "Data"))
             TabView(selection: $selectedMenu){
                     ZStack{
                         GeometryReader{ geometry in

@@ -6,7 +6,7 @@
 //
 import AVKit
 
-class AudioPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
+class AudioPlayerManager: NSObject, AudioPlayerProtocol{
     var currentAudio: Audio?
     var playlist: PlaylistModel?
     var player: AVPlayer?
@@ -48,8 +48,21 @@ class AudioPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
         
         //TODO: Find a way to optimize this
         observer = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: .main) { [weak self] time in
+                var status: AudioPlayerStatus = .noAudioIsSelected
+            switch self?.player?.timeControlStatus ?? .waitingToPlayAtSpecifiedRate{
+            case .paused:
+                status = .isPaused
+            case .waitingToPlayAtSpecifiedRate:
+                status = .isLoading
+            case .playing:
+                status = .isPlaying
+            @unknown default:
+                status = .isLoading
+            }
                 if self?.player?.timeControlStatus == .playing {
-                    self?.notificationManager.status(status: .isPlaying)
+                    if status != self?.status{
+                        self?.notificationManager.status(status: .isPlaying)
+                    }
                     self?.updateDuration()
                     self?.checkDuration()
                     self?.status = .isPlaying

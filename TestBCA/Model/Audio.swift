@@ -12,44 +12,44 @@ struct AudioResponse: Codable {
     let results: [Audio]
 }
 
-public class Audio: Codable, NSCoding, Identifiable {
-    public func encode(with coder: NSCoder) {
-        coder.encode(wrapperType.rawValue, forKey: CodingKeys.wrapperType.rawValue)
-        switch wrapperType {
-        case .audiobook:
-            coder.encode(title, forKey: CodingKeys.collectionName.rawValue)
-        case .song:
-            coder.encode(title, forKey: CodingKeys.title.rawValue)
-        }
-        coder.encode(id, forKey: CodingKeys.collectionId.rawValue)
-        coder.encode(artistName, forKey: CodingKeys.artistName.rawValue)
-        coder.encode(artworkUrl100, forKey: CodingKeys.artworkUrl100.rawValue)
-        coder.encode(previewUrl, forKey: CodingKeys.previewUrl.rawValue)
-    }
-    
-    public required init?(coder: NSCoder) {
-        // Decode wrapperType safely
-        guard let wrapperString = coder.decodeObject(forKey: CodingKeys.wrapperType.rawValue) as? String,
-              let wrapper = AudioType(rawValue: wrapperString)
-        else {
-            return nil
-        }
-        self.wrapperType = wrapper
-
-        self.id = coder.decodeInteger(forKey: CodingKeys.collectionId.rawValue)
-        self.artistName = coder.decodeObject(forKey: CodingKeys.artistName.rawValue) as? String ?? ""
-
-        switch wrapper {
-        case .audiobook:
-            self.title = coder.decodeObject(forKey: CodingKeys.collectionName.rawValue) as? String ?? ""
-        case .song:
-            self.title = coder.decodeObject(forKey: CodingKeys.title.rawValue) as? String ?? ""
-        }
-
-        self.artworkUrl100 = coder.decodeObject(forKey: CodingKeys.artworkUrl100.rawValue) as? String
-        self.previewUrl = coder.decodeObject(forKey: CodingKeys.previewUrl.rawValue) as? String
-    }
-    
+public class Audio: Codable, Identifiable {
+//    public func encode(with coder: NSCoder) {
+//        coder.encode(wrapperType.rawValue, forKey: CodingKeys.wrapperType.rawValue)
+//        switch wrapperType {
+//        case .audiobook:
+//            coder.encode(title, forKey: CodingKeys.collectionName.rawValue)
+//        case .song:
+//            coder.encode(title, forKey: CodingKeys.title.rawValue)
+//        }
+//        coder.encode(id, forKey: CodingKeys.collectionId.rawValue)
+//        coder.encode(artistName, forKey: CodingKeys.artistName.rawValue)
+//        coder.encode(artworkUrl100, forKey: CodingKeys.artworkUrl100.rawValue)
+//        coder.encode(previewUrl, forKey: CodingKeys.previewUrl.rawValue)
+//    }
+//    
+//    public required init?(coder: NSCoder) {
+//        // Decode wrapperType safely
+//        guard let wrapperString = coder.decodeObject(forKey: CodingKeys.wrapperType.rawValue) as? String,
+//              let wrapper = AudioType(rawValue: wrapperString)
+//        else {
+//            return nil
+//        }
+//        self.wrapperType = wrapper
+//
+//        self.id = coder.decodeInteger(forKey: CodingKeys.collectionId.rawValue)
+//        self.artistName = coder.decodeObject(forKey: CodingKeys.artistName.rawValue) as? String ?? ""
+//
+//        switch wrapper {
+//        case .audiobook:
+//            self.title = coder.decodeObject(forKey: CodingKeys.collectionName.rawValue) as? String ?? ""
+//        case .song:
+//            self.title = coder.decodeObject(forKey: CodingKeys.title.rawValue) as? String ?? ""
+//        }
+//
+//        self.artworkUrl100 = coder.decodeObject(forKey: CodingKeys.artworkUrl100.rawValue) as? String
+//        self.previewUrl = coder.decodeObject(forKey: CodingKeys.previewUrl.rawValue) as? String
+//    }
+//    
     let wrapperType: AudioType
     public let id: Int // using collectionId
     let title: String // using collectionName
