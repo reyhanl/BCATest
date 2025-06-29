@@ -6,8 +6,8 @@
 //
 import SwiftUI
 
-struct HomeView<T: MainViewModelProtocol>: View{
-    @EnvironmentObject var vm: T
+struct HomeView<T: HomeViewModelProtocol>: View{
+    @StateObject var vm: T
     @State var searchText: String = ""
     @FocusState private var isFocused: Bool
     var body: some View{
@@ -21,25 +21,11 @@ struct HomeView<T: MainViewModelProtocol>: View{
                         .onChange(of: searchText) { oldValue, newValue in
                             vm.searchTextValueChanged(to: newValue)
                         }
-                        .onChange(of: isFocused) { oldValue, newValue in
-                            if newValue{
-                                vm.userWantsToType()
-                            }else{
-                                vm.userCancelTyping()
-                            }
-                        }
                     }else{
                         TextField("Search", text: $searchText).focused($isFocused)
                         
                         .onChange(of: searchText) { newValue in
                             vm.searchTextValueChanged(to: newValue)
-                        }
-                        .onChange(of: isFocused) { newValue in
-                            if newValue{
-                                vm.userWantsToType()
-                            }else{
-                                vm.userCancelTyping()
-                            }
                         }
                     }
                     Spacer()
@@ -50,6 +36,9 @@ struct HomeView<T: MainViewModelProtocol>: View{
                         }
                     }
                 }.padding(.horizontal, 10)
+                .onAppear(perform: {
+                    vm.viewDidLoad()
+                })
                 if isFocused{
                     generateSearchContent()
                 }else{
@@ -184,9 +173,6 @@ struct HomeView<T: MainViewModelProtocol>: View{
             }
             .modifier(Shimmer())
             .padding(.horizontal, 10)
-            .contentShape(Rectangle()).onTapGesture {
-                vm.userClickRow(at: index)
-            }
         }
         Spacer()
     }

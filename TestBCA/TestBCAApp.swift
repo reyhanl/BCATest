@@ -11,7 +11,17 @@ import SwiftUI
 struct TestBCAApp: App {
     var body: some Scene {
         WindowGroup {
-            MainView(vm: MainViewModel(api: AudioPersistenceUsecase(persistence: AudioRemotePersistence()), playerManager: AudioPlayerManager(loader: AudioLoader())))
+            MainView(
+                vm: MainViewModel(
+                    api: AudioPersistenceUsecase(
+                        persistence: AudioRemotePersistence()
+                    ),
+                    playerManager: AudioPlayerManager(
+                        loader: AudioLoader(),
+                        notificationManager: AudioPlayerNotificationManager()
+                    )
+                )
+            )
         }
     }
 }

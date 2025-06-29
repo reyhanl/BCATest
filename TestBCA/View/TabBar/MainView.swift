@@ -23,16 +23,20 @@ struct MainView<T: MainViewModelProtocol>: View {
             TabView(selection: $selectedMenu){
                     ZStack{
                         GeometryReader{ geometry in
-                            HomeView<T>()
-                                .environmentObject(vm)
-                                .frame(width: geometry.size.width, height: geometry.size.height).onAppear {
+                            HomeView(
+                                vm: HomeViewModel(
+                                    api: AudioPersistenceUsecase(persistence: AudioRemotePersistence()),
+                                    playerManager: vm.playerManager                                    )
+                            )
+                                .frame(width: geometry.size.width, height: geometry.size.height)
+                                .onAppear {
                                 safeAreaBottom = geometry.safeAreaInsets.bottom
                             }
                         }
                     }.tabItem {
-                    Image(systemName: selectedMenu == .home ? "house.fill" : "house")
-                    Text("Home")
-                }.tag(TabBarMenu.home)
+                        Image(systemName: selectedMenu == .home ? "house.fill" : "house")
+                        Text("Home")
+                    }.tag(TabBarMenu.home)
                 PlaylistView()
                     .tabItem {
                         Image(systemName: selectedMenu == .home ? "list.bullet.clipboard.fill" : "list.bullet.clipboard")
@@ -75,5 +79,5 @@ struct MainView<T: MainViewModelProtocol>: View {
 }
 
 #Preview {
-    MainView(vm: MainViewModel(api: AudioPersistenceUsecase(persistence: AudioRemotePersistence()), playerManager: AudioPlayerManager(loader: AudioLoader())))
+    MainView(vm: MainViewModel(api: AudioPersistenceUsecase(persistence: AudioRemotePersistence()), playerManager: AudioPlayerManager(loader: AudioLoader(), notificationManager: AudioPlayerNotificationManager())))
 }

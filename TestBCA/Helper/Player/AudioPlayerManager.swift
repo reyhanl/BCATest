@@ -13,13 +13,14 @@ class AudioPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
     var value: Int?
     var duration: Int?
     var audioLoader: AudioLoaderProtocol
+    var notificationManager: AudioPlayerNotificationManagerProtocol
     var status: AudioPlayerStatus = .noAudioIsSelected
     var timer: Timer?
-    weak var delegate: AudioPlayerDelegate?
     var observer:Any?
     
-    init(loader: AudioLoaderProtocol) {
+    init(loader: AudioLoaderProtocol, notificationManager: AudioPlayerNotificationManager) {
         self.audioLoader = loader
+        self.notificationManager = notificationManager
     }
     
     func play() {
@@ -30,36 +31,36 @@ class AudioPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
     
     func play(audio: Audio, withPlaylist: [Audio] = []) {
         player?.pause()
-        delegate?.status(status: .isLoading)
+        notificationManager.status(status: .isLoading)
         resetStatManually()
         guard let item = audioLoader.loadAudio(url: audio.previewUrl ?? "")
         else{
-            delegate?.status(status: .failedToLoad)
+            notificationManager.status(status: .failedToLoad)
             return
         }
         self.currentAudio = audio
         self.playlist = withPlaylist
-        delegate?.didChangeAudio(audio: audio)
+        notificationManager.didChangeAudio(audio: audio)
         player = AVPlayer(playerItem: item)
         player?.play()
-        delegate?.status(status: .isLoading)
+        notificationManager.status(status: .isLoading)
 //        player?.addObserver(self, forKeyPath: "rate", options: [], context: nil)
         
         //TODO: Find a way to optimize this
         observer = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: .main) { [weak self] time in
                 if self?.player?.timeControlStatus == .playing {
-                    self?.delegate?.status(status: .isPlaying)
+                    self?.notificationManager.status(status: .isPlaying)
                     self?.updateDuration()
                     self?.checkDuration()
                     self?.status = .isPlaying
                 } else if self?.player?.timeControlStatus == .paused {
-                    self?.delegate?.status(status: .isPaused)
+                    self?.notificationManager.status(status: .isPaused)
                     self?.updateDuration()
                     self?.status = .isPaused
                 } else if self?.player?.timeControlStatus == .waitingToPlayAtSpecifiedRate {
                     self?.status = .isLoading
-                    self?.delegate?.status(status: .isLoading)
-                    self?.delegate?.updateTime(currentPlaybackTime: 0, totalDuration: 0)
+                    self?.notificationManager.status(status: .isLoading)
+                    self?.notificationManager.updateTime(currentPlaybackTime: 0, totalDuration: 0)
                 }
 
             }
@@ -141,7 +142,7 @@ class AudioPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
         self.duration = Int(player?.currentItem?.duration.seconds ?? 0)
         print("duration: \(duration)")
         DispatchQueue.main.async { [weak self] in
-            self?.delegate?.updateTime(currentPlaybackTime: playbackTime, totalDuration: duration)
+            self?.notificationManager.updateTime(currentPlaybackTime: playbackTime, totalDuration: duration)
         }
     }
     
@@ -178,3 +179,39 @@ class AudioPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
     }
 }
 
+class AudioPlayerNotificationManager: AudioPlayerNotificationManagerProtocol{
+    
+    func addObserver(to delegate: any AudioNotificationManagerDelegate){
+        NotificationCenter.default.addObserver(delegate, selector: #selector(delegate.didChangeAudio(_:)), name: .didChangeAudio, object: nil)
+        NotificationCenter.default.addObserver(delegate, selector: #selector(delegate.updateTime(_:)), name: .updateTime, object: nil)
+        NotificationCenter.default.addObserver(delegate, selector: #selector(delegate.status(_:)), name: .status, object: nil)
+    }
+    
+    func didChangeAudio(audio: Audio){
+        NotificationCenter.default.post(name: .didChangeAudio, object: audio)
+    }
+    func updateTime(currentPlaybackTime: Int, totalDuration: Int){
+        NotificationCenter.default.post(name: .updateTime, object: AudioDurationUpdate(currentDuration: currentPlaybackTime, totalDuration: totalDuration))
+    }
+    func status(status: AudioPlayerStatus){
+        NotificationCenter.default.post(name: .status, object: status)
+    }
+}
+
+struct AudioDurationUpdate{
+    var currentDuration: Int
+    var totalDuration: Int
+}
+
+@objc protocol AudioNotificationManagerDelegate: AnyObject {
+    @objc func didChangeAudio(_ notification: Notification)
+    @objc func updateTime(_ notification: Notification)
+    @objc func status(_ notification: Notification)
+}
+
+protocol AudioPlayerNotificationManagerProtocol{
+    func addObserver(to delegate: any AudioNotificationManagerDelegate)
+    func didChangeAudio(audio: Audio)
+    func updateTime(currentPlaybackTime: Int, totalDuration: Int)
+    func status(status: AudioPlayerStatus)
+}

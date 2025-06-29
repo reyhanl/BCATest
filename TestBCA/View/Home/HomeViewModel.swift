@@ -1,23 +1,25 @@
 //
-//  TabBarVM.swift
+//  HomeViewModel.swift
 //  TestBCA
 //
-//  Created by reyhan muhammad on 2025/6/29.
+//  Created by reyhan muhammad on 2025/6/30.
 //
-import SwiftUI
 
-class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{    
+import SwiftUI
+import AVKit
+
+class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
     @Published var currentDuration: Int = 0
-    @Published var duration: Int = 10
-    @Published var thumbnailImage: String = ""
-    @Published var title: String = ""
     @Published var isLoadingSearching: Bool = false
     var api: AudioAPIUseCaseProtocol
     @Published var playerManager: AudioPlayerProtocol
-    @Published var audios: [Audio] = []
+    @Published var audios: [Audio] = []{
+        didSet{
+            print("count: \(audios.count)")
+        }
+    }
     @Published var audio: Audio?
     @Published var audioPlayerStatus: AudioPlayerStatus = .noAudioIsSelected
-    
     @Published var searchText: String = ""
     
     let debouncer: Debouncer = Debouncer(interval: 1)
@@ -30,6 +32,12 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
     
     func viewDidLoad(){
         addObserver()
+        Task{
+            let audios = try await fetchData()
+            await MainActor.run {
+                self.audios = audios
+            }
+        }
     }
     
     func addObserver(){
@@ -37,8 +45,14 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
     }
     
     func fetchData() async throws -> [Audio]{
+        await MainActor.run {
+            self.isLoadingSearching = true
+        }
         do{
             let audios = try await api.loadAudio(keyword: nil)
+            await MainActor.run {
+                self.isLoadingSearching = false
+            }
             return audios
         }catch{
             print("error: \(String.init(describing: error))")
@@ -60,7 +74,9 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
     }
     
     func search(text: String) async{
-        self.isLoadingSearching = true
+        await MainActor.run {
+            self.isLoadingSearching = true
+        }
         do{
             let audios = try await self.api.loadAudio(keyword: text)
             await MainActor.run {
@@ -74,70 +90,32 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
             print("error: \(String.init(describing: error))")
         }
     }
-    
-    func userWantsToType() {
-        
-    }
-    
-    func userCancelTyping() {
-        
-    }
 }
 
-//MARK: Playback Control
-extension MainViewModel{
-    func next(){
-        playerManager.next()
-    }
-    
-    func previous(){
-        playerManager.previous()
-    }
-    
-    func playPause(){
-        playerManager.togglePlay()
-    }
-    
-    func pause(){
-        playerManager.pause()
-    }
-    
-    func play(){
-        playerManager.play()
-    }
-    
-    func seek(to duration: Int) {
-        playerManager.seek(to: duration)
-    }
-}
-
-extension MainViewModel: AudioNotificationManagerDelegate{
+extension HomeViewModel: AudioNotificationManagerDelegate{
     @objc func didChangeAudio(_ notification: Notification) {
         if let audio = notification.object as? Audio{
             self.audio = audio
-            self.thumbnailImage = audio.artworkUrl100 ?? ""
-            self.title = audio.title
         }
     }
     
     @objc func updateTime(_ notification: Notification) {
         print("update time is called")
         if let duration = notification.object as? AudioDurationUpdate{
-            self.currentDuration = duration.currentDuration
-            self.duration = duration.totalDuration
         }
     }
     
     @objc func status(_ notification: Notification) {
         print("status update is called")
         if let status = notification.object as? AudioPlayerStatus{
-            if self.audioPlayerStatus == .noAudioIsSelected{
-                withAnimation {
-                    self.audioPlayerStatus = status
-                }
-            }else{
-                self.audioPlayerStatus = status
-            }
+//            if self.audioPlayerStatus == .noAudioIsSelected{
+//                withAnimation {
+//                    self.audioPlayerStatus = status
+//                }
+//            }else{
+//                self.audioPlayerStatus = status
+//            }
         }
     }
 }
+
