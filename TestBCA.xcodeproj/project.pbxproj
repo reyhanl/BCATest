@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 73;
 	objects = {
 
 /* Begin PBXContainerItemProxy section */
@@ -30,7 +30,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		FCB93BF72E1178DA007E806C /* Exceptions for "TestBCA" folder in "TestBCATests" target */ = {
+		FCB93BF72E1178DA007E806C /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				DummyJson.json,
@@ -56,14 +56,14 @@
 			);
 			target = FCB93B252E10DB1B007E806C /* TestBCATests */;
 		};
-		FCB93C162E1199DD007E806C /* Exceptions for "TestBCA" folder in "TestBCA" target */ = {
+		FCB93C162E1199DD007E806C /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				DummyJson.json,
 			);
 			target = FCB93B142E10DB18007E806C /* TestBCA */;
 		};
-		FCB93C1E2E119E05007E806C /* Exceptions for "TestBCATests" folder in "TestBCA" target */ = {
+		FCB93C1E2E119E05007E806C /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				DummyData.json,
@@ -74,7 +74,7 @@
 			);
 			target = FCB93B142E10DB18007E806C /* TestBCA */;
 		};
-		FCFA0E2C2E12CD6E007C79B0 /* Exceptions for "TestBCATests" folder in "TestBCAUITests" target */ = {
+		FCFA0E2C2E12CD6E007C79B0 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				DummyMainApiUsecase.swift,
@@ -84,7 +84,7 @@
 			);
 			target = FCB93B2F2E10DB1B007E806C /* TestBCAUITests */;
 		};
-		FCFA0E2F2E12D6E3007C79B0 /* Exceptions for "TestBCA" folder in "TestBCAUITests" target */ = {
+		FCFA0E2F2E12D6E3007C79B0 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Extension/NotificationNameExtension.swift,
@@ -104,14 +104,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		FCB93C172E1199DD007E806C /* Exceptions for "TestBCA" folder in "Compile Sources" phase from "TestBCA" target */ = {
+		FCB93C172E1199DD007E806C /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			buildPhase = FCB93B112E10DB18007E806C /* Sources */;
 			membershipExceptions = (
 				DummyJson.json,
 			);
 		};
-		FCB93C252E11A27C007E806C /* Exceptions for "TestBCATests" folder in "Compile Sources" phase from "TestBCATests" target */ = {
+		FCB93C252E11A27C007E806C /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			buildPhase = FCB93B222E10DB1B007E806C /* Sources */;
 			membershipExceptions = (
@@ -121,32 +121,9 @@
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		FCB93B172E10DB18007E806C /* TestBCA */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				FCB93C162E1199DD007E806C /* Exceptions for "TestBCA" folder in "TestBCA" target */,
-				FCB93C172E1199DD007E806C /* Exceptions for "TestBCA" folder in "Compile Sources" phase from "TestBCA" target */,
-				FCB93BF72E1178DA007E806C /* Exceptions for "TestBCA" folder in "TestBCATests" target */,
-				FCFA0E2F2E12D6E3007C79B0 /* Exceptions for "TestBCA" folder in "TestBCAUITests" target */,
-			);
-			path = TestBCA;
-			sourceTree = "<group>";
-		};
-		FCB93B292E10DB1B007E806C /* TestBCATests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				FCB93C1E2E119E05007E806C /* Exceptions for "TestBCATests" folder in "TestBCA" target */,
-				FCB93C252E11A27C007E806C /* Exceptions for "TestBCATests" folder in "Compile Sources" phase from "TestBCATests" target */,
-				FCFA0E2C2E12CD6E007C79B0 /* Exceptions for "TestBCATests" folder in "TestBCAUITests" target */,
-			);
-			path = TestBCATests;
-			sourceTree = "<group>";
-		};
-		FCB93B332E10DB1B007E806C /* TestBCAUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = TestBCAUITests;
-			sourceTree = "<group>";
-		};
+		FCB93B172E10DB18007E806C /* TestBCA */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FCB93C162E1199DD007E806C /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FCB93C172E1199DD007E806C /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, FCB93BF72E1178DA007E806C /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FCFA0E2F2E12D6E3007C79B0 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TestBCA; sourceTree = "<group>"; };
+		FCB93B292E10DB1B007E806C /* TestBCATests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (FCB93C1E2E119E05007E806C /* PBXFileSystemSynchronizedBuildFileExceptionSet */, FCB93C252E11A27C007E806C /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, FCFA0E2C2E12CD6E007C79B0 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TestBCATests; sourceTree = "<group>"; };
+		FCB93B332E10DB1B007E806C /* TestBCAUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TestBCAUITests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -297,7 +274,7 @@
 			);
 			mainGroup = FCB93B0C2E10DB18007E806C;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
+			preferredProjectObjectVersion = 56;
 			productRefGroup = FCB93B162E10DB18007E806C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
