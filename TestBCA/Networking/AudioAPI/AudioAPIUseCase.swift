@@ -17,3 +17,16 @@ class AudioPersistenceUsecase: AudioAPIUseCaseProtocol{
         try await persistence.loadAudio(keyword: keyword)
     }
 }
+
+class MockAudioPersistenceUsecase: AudioAPIUseCaseProtocol{
+    var persistence: AudioPersistenceProtocol
+    
+    init(persistence: AudioPersistenceProtocol) {
+        self.persistence = persistence
+    }
+    
+    func loadAudio(keyword: String?) async throws -> [Audio]{
+        try await persistence.loadAudio(keyword: keyword)
+    }
+}
+

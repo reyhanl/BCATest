@@ -8,6 +8,18 @@
 import Foundation
 
 class DummyPlayerManager: NSObject, ObservableObject, AudioPlayerProtocol{
+    var playlist: PlaylistModel?
+    
+    var notificationManager: any AudioPlayerNotificationManagerProtocol
+    
+    init(notificationManager: any AudioPlayerNotificationManagerProtocol) {
+        self.notificationManager = notificationManager
+    }
+    
+    func play(audio: Audio, withPlaylist: PlaylistModel) {
+        
+    }
+    
     var value: Int?
     
     var duration: Int?

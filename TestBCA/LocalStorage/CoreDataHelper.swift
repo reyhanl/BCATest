@@ -17,7 +17,7 @@ protocol CoreDataHelperProtocol{
 
 struct CoreDataStack{
     var container: NSPersistentContainer
-    var name: String
+    var name: String?
     var context: NSManagedObjectContext?
     var description: [NSPersistentStoreDescription]?
     
@@ -27,6 +27,19 @@ struct CoreDataStack{
         self.description = type
         loadContainer()
         self.context = container.viewContext
+    }
+    
+    init(persistent container: NSPersistentContainer){
+        container.loadPersistentStores(completionHandler: { (_, error) in
+            if let error = error {
+                fatalError("Failed to load Core Data stack: \(error)")
+            }
+        })
+        
+        self.container = container
+        self.context = container.viewContext
+        self.name = nil
+        self.description = nil
     }
     
     func loadContainer(){
@@ -84,10 +97,6 @@ struct CoreDataHelper: CoreDataHelperProtocol{
         guard let context = stack.context else{
             ErrorSender.sendError(error: CustomError.failedToLoadContext)
             throw CustomError.failedToLoadContext
-        }
-        guard let entity =  NSEntityDescription.entity(forEntityName: entityName, in: context) else{
-            ErrorSender.sendError(error: CustomError.failedToLoadEntity)
-            throw CustomError.failedToLoadEntity
         }
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         if let predicate = predicate{

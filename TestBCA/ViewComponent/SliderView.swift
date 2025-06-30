@@ -73,11 +73,16 @@ struct SliderView: View {
                     // You can reset or add custom logic here
                 }
         )
-        .onTapGesture(perform: { point in
-            let maxDuration = duration
-            let newValue = Int((point.x / width) * CGFloat(maxDuration))
-            actions.seek(newValue)
-        })
+        .gesture(
+            DragGesture(minimumDistance: 0)
+                .onEnded { value in
+                    // Convert global location to local coordinate
+                    let localPoint = value.location
+                    let maxDuration = duration
+                    let newValue = Int((localPoint.x / width) * CGFloat(maxDuration))
+                    actions.seek(newValue)
+                }
+        )
         .clipShape(Capsule()).overlay {
             Capsule().stroke(Color.primary, style: .init(lineWidth: 1))
         }

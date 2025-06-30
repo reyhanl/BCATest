@@ -1,19 +1,13 @@
 //
-//  DummyMainApiUsecase.swift
+//  MockHomePersistence.swift
 //  TestBCA
 //
-//  Created by reyhan muhammad on 2025/6/29.
+//  Created by reyhan muhammad on 2025/6/30.
 //
 
 import Foundation
 
-class DummyPersistenceUsecase: AudioAPIUseCaseProtocol, AudioPersistenceProtocol{
-    var persistence: AudioPersistenceProtocol
-    
-    init(persistence: AudioPersistenceProtocol) {
-        self.persistence = persistence
-    }
-    
+class MockHomePersistence: AudioPersistenceProtocol{
     func loadAudio(keyword: String?) async throws -> [Audio]{
         let reader = JSONReader(bundle: Bundle(for: type(of: self)))
         let audios: [Audio] = try reader.generateDummyFromJSON(fileName: "FourAudioJSON")

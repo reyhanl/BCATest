@@ -11,7 +11,7 @@ import XCTest
 struct TestBCATests {
 
     @Test func testSimpleFetch() async throws {
-        let mainViewModel = MainViewModel(api: DummyPersistenceUsecase(persistence: AudioRemotePersistence()), playerManager: DummyPlayerManager())
+        let mainViewModel = MainViewModel(api: DummyPersistenceUsecase(persistence: AudioRemotePersistence()), playerManager: DummyPlayerManager(notificationManager: AudioPlayerNotificationManager()))
         let audios = try await mainViewModel.fetchData()
         #expect(audios.count == 4)
     }
@@ -24,7 +24,7 @@ struct TestBCATests {
     }
 
     @Test func testSearch() async throws {
-        let mainViewModel = MainViewModel(api: DummyPersistenceUsecase(persistence: AudioRemotePersistence()), playerManager: DummyPlayerManager())
+        let mainViewModel = MainViewModel(api: DummyPersistenceUsecase(persistence: AudioRemotePersistence()), playerManager: DummyPlayerManager(notificationManager: AudioPlayerNotificationManager()))
         await mainViewModel.search(text: "The Art of Stillness")
         #expect(mainViewModel.audios.count == 1)
     }

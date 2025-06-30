@@ -17,13 +17,13 @@ struct HomeView<T: HomeViewModelProtocol>: View{
                     Image(systemName: "magnifyingglass").renderingMode(.template).tint(.secondary).foregroundStyle(.secondary)
                     if #available(iOS 17.0, *) {
                         TextField("Search", text: $searchText).focused($isFocused)
-                        
+                        .accessibilityIdentifier("searchTextField")
                         .onChange(of: searchText) { oldValue, newValue in
                             vm.searchTextValueChanged(to: newValue)
                         }
                     }else{
                         TextField("Search", text: $searchText).focused($isFocused)
-                        
+                            .accessibilityIdentifier("searchTextField")
                         .onChange(of: searchText) { newValue in
                             vm.searchTextValueChanged(to: newValue)
                         }
@@ -204,6 +204,7 @@ struct HomeView<T: HomeViewModelProtocol>: View{
                             AsyncImage(url: URL(string: audio.artworkUrl100 ?? "")).aspectRatio(contentMode: .fit).frame(width: 50, height: 50).clipShape(RoundedRectangle(cornerRadius: 10))
                             HStack{
                                 Text(audio.title)
+                                    .accessibilityIdentifier(audio.title)
                                     .lineLimit(1)
                                 Spacer()
                             }
@@ -214,7 +215,7 @@ struct HomeView<T: HomeViewModelProtocol>: View{
                         }
                         Spacer()
                         if vm.audio?.id == audio.id{
-                            Image(systemName: "waveform.path")
+                            Image(systemName: "waveform.path").accessibilityIdentifier(audio.title + "isPlaying")
                         
                         }
                         Image(systemName:"plus").resizable().frame(width: 20, height: 20).contentShape(Rectangle())

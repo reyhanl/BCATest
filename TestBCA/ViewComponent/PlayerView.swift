@@ -31,16 +31,18 @@ struct PlayerView: View {
                     AsyncImage(url: URL(string: thumbnailImage)).aspectRatio(contentMode: .fit).frame(width: 50, height: 50).clipShape(RoundedRectangle(cornerRadius: 10))
                     Text(title).bold()
                     Spacer()
-                    makeButton(imageName: "chevron.backward")
-                        .opacity(isPreviousSongAvailable ? 1:0)
-                    .onTapGesture {
-                        guard isPreviousSongAvailable else{return}
-                        actions.previous()
+                    if isPreviousSongAvailable{
+                        makeButton(imageName: "chevron.backward", id: "previousTrackButton")
+                            .opacity(isPreviousSongAvailable ? 1:0)
+                        .onTapGesture {
+                            guard isPreviousSongAvailable else{return}
+                            actions.previous()
+                        }
                     }
-                    makeButton(imageName: status == .isPlaying ? "pause.fill":"play.fill").onTapGesture {
+                    makeButton(imageName: status == .isPlaying ? "pause.fill":"play.fill", id: "play").onTapGesture {
                         actions.playPause()
                     }
-                    makeButton(imageName: "chevron.right")
+                    makeButton(imageName: "chevron.right", id: "nextTrackButton")
                         .opacity(isNextSongAvailable ? 1:0)
                         .onTapGesture {
                         guard isNextSongAvailable else{return}
@@ -74,9 +76,9 @@ struct PlayerView: View {
         .shadow(color: Color.black.opacity(0.3), radius: 4, x: 2, y: 2)
     }
     
-    @ViewBuilder func makeButton(imageName: String) -> some View{
+    @ViewBuilder func makeButton(imageName: String, id: String) -> some View{
         ZStack{
-            Image(systemName: imageName).resizable().aspectRatio(contentMode: .fit).frame(width: 20, height: 20)
+            Image(systemName: imageName).resizable().aspectRatio(contentMode: .fit).frame(width: 20, height: 20).accessibilityIdentifier(id)
         }
     }
 }

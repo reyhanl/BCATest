@@ -18,22 +18,41 @@ struct MainView<T: MainViewModelProtocol>: View {
     @ObservedObject var vm: T
     @State var safeAreaBottom: CGFloat = 0
     @State var selectedMenu: TabBarMenu = .home
+    @Binding var testing: UITestingType
     let helper = CoreDataHelper(stack: .init(name: "Data"))
     var body: some View {
         ZStack{
             TabView(selection: $selectedMenu){
                     ZStack{
                         GeometryReader{ geometry in
-                            HomeView(
-                                vm: HomeViewModel(
-                                    api: AudioPersistenceUsecase(persistence: AudioRemotePersistence()),
-                                    playlistAPI: PlaylistPersistenceUsecase(persistence: PlaylistLocalPersistence(helper: helper, entityName: "Playlist")),
-                                    playerManager: vm.playerManager
+                            switch testing {
+                            case .testingTapOnACellToPlay, .testingHomeViewDisplayingData,
+                                    .testingOpeningSearchingUI,
+                                    .testingPlayingTheFirstAudio
+                                :
+                                HomeView(
+                                    vm: HomeViewModel(
+                                        api: AudioPersistenceUsecase(persistence: MockHomePersistence()),
+                                        playlistAPI: PlaylistPersistenceUsecase(persistence: PlaylistLocalPersistence(helper: helper, entityName: "Playlist")),
+                                        playerManager: vm.playerManager
+                                    )
                                 )
-                            )
-                                .frame(width: geometry.size.width, height: geometry.size.height)
-                                .onAppear {
-                                safeAreaBottom = geometry.safeAreaInsets.bottom
+                                    .frame(width: geometry.size.width, height: geometry.size.height)
+                                    .onAppear {
+                                    safeAreaBottom = geometry.safeAreaInsets.bottom
+                                }
+                            default:
+                                HomeView(
+                                    vm: HomeViewModel(
+                                        api: AudioPersistenceUsecase(persistence: AudioRemotePersistence()),
+                                        playlistAPI: PlaylistPersistenceUsecase(persistence: PlaylistLocalPersistence(helper: helper, entityName: "Playlist")),
+                                        playerManager: vm.playerManager
+                                    )
+                                )
+                                    .frame(width: geometry.size.width, height: geometry.size.height)
+                                    .onAppear {
+                                    safeAreaBottom = geometry.safeAreaInsets.bottom
+                                }
                             }
                         }
                     }.tabItem {
@@ -97,5 +116,5 @@ struct MainView<T: MainViewModelProtocol>: View {
 }
 
 #Preview {
-    MainView(vm: MainViewModel(api: AudioPersistenceUsecase(persistence: AudioRemotePersistence()), playerManager: AudioPlayerManager(loader: AudioLoader(), notificationManager: AudioPlayerNotificationManager())))
+    MainView(vm: MainViewModel(api: AudioPersistenceUsecase(persistence: AudioRemotePersistence()), playerManager: AudioPlayerManager(loader: AudioLoader(), notificationManager: AudioPlayerNotificationManager())), testing: .constant(.none))
 }
