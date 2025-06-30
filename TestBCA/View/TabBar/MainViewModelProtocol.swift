@@ -16,10 +16,12 @@ protocol MainViewModelProtocol: ObservableObject{
     var audioPlayerStatus: AudioPlayerStatus{get set}
     var thumbnailImage: String{get set}
     var title: String{get set}
+    var errorMessage: String?{get set}
     var currentDuration: Int{get set}
     var duration: Int{get set}
     var isLoadingSearching: Bool{get set}
     var isPreviousSongAvailable: Bool{get set}
+    var shouldDisplayError: Bool{get set}
     var isNextSongAvailable: Bool{get set}
     
     func viewDidLoad()

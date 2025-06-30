@@ -20,6 +20,7 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
         }
     }
     @Published var audio: Audio?
+    @Published var searchError: Error?
     @Published var selectedAudioToAdd: Audio?
     @Published var audioPlayerStatus: AudioPlayerStatus = .noAudioIsSelected
     @Published var searchText: String = ""
@@ -55,6 +56,7 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
     func fetchData() async throws -> [Audio]{
         await MainActor.run {
             self.isLoadingSearching = true
+            self.searchError = nil
         }
         do{
             let audios = try await api.loadAudio(keyword: nil)
@@ -63,6 +65,11 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
             }
             return audios
         }catch{
+            await MainActor.run {
+                self.audios = []
+                ErrorSender.sendError(error:CustomError.searchError)
+                self.searchError = CustomError.searchError
+            }
             print("error: \(String.init(describing: error))")
             throw error
         }
@@ -94,6 +101,7 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
     func search(text: String) async{
         await MainActor.run {
             self.isLoadingSearching = true
+            self.searchError = nil
         }
         do{
             let audios = try await self.api.loadAudio(keyword: text)
@@ -104,6 +112,9 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
         }catch{
             await MainActor.run {
                 self.isLoadingSearching = false
+                self.audios = []
+                ErrorSender.sendError(error:CustomError.searchError)
+                self.searchError = CustomError.searchError
             }
             print("error: \(String.init(describing: error))")
         }
@@ -124,6 +135,9 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
             await MainActor.run {
                 self.playlists = playlists
                 self.shouldPresentPlaylistModal = false
+                if playlist.id == playerManager.playlist?.id{
+                    playlist.audios.audios.append(audio)
+                }
             }
         }
     }

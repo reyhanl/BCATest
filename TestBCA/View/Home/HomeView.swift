@@ -100,10 +100,17 @@ struct HomeView<T: HomeViewModelProtocol>: View{
     func generateSearchContent() -> some View{
         let columns = [GridItem(.flexible()), GridItem(.flexible())]
         VStack{
-            if vm.isLoadingSearching{
-                generateSearchContentLoading(columns: columns)
+            if let error = vm.searchError as? CustomError{
+                VStack{
+                    Text("🙏🏻").font(.system(size: 100))
+                    Text("Something went wrong during search").font(.system(size: 100))
+                }
             }else{
-                generateSearchContentResult(columns: columns)
+                if vm.isLoadingSearching{
+                    generateSearchContentLoading(columns: columns)
+                }else{
+                    generateSearchContentResult(columns: columns)
+                }
             }
         }
     }

@@ -57,9 +57,11 @@ struct CoreDataHelper: CoreDataHelperProtocol{
     
     func save<T: Codable>(entity: String, object: T) throws{
         guard let context = stack.context else{
+            ErrorSender.sendError(error: CustomError.failedToLoadContext)
             throw CustomError.failedToLoadContext
         }
         guard let entity =  NSEntityDescription.entity(forEntityName: entity, in: context) else{
+            ErrorSender.sendError(error: CustomError.failedToLoadEntity)
             throw CustomError.failedToLoadEntity
         }
         let newData = NSManagedObject(entity: entity, insertInto: context)
@@ -71,7 +73,8 @@ struct CoreDataHelper: CoreDataHelperProtocol{
         
         let keys = Set(entity.attributesByName.keys)
         guard let filteredDict = dict?.filter({ keys.contains($0.key) }) else{
-            throw CustomError.custom("")
+            ErrorSender.sendError(error: CustomError.noDataAvailable)
+            throw CustomError.noDataAvailable
         }
         newData.setValuesForKeys(filteredDict)
         try context.save()
@@ -79,9 +82,11 @@ struct CoreDataHelper: CoreDataHelperProtocol{
     
     func get(entityName: String, predicate: NSPredicate? = nil) throws -> [NSManagedObject]{
         guard let context = stack.context else{
+            ErrorSender.sendError(error: CustomError.failedToLoadContext)
             throw CustomError.failedToLoadContext
         }
         guard let entity =  NSEntityDescription.entity(forEntityName: entityName, in: context) else{
+            ErrorSender.sendError(error: CustomError.failedToLoadEntity)
             throw CustomError.failedToLoadEntity
         }
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
@@ -99,9 +104,11 @@ struct CoreDataHelper: CoreDataHelperProtocol{
 
     func getGeneric<T: Codable>(entityName: String, predicate: NSPredicate? = nil) throws -> [T]{
         guard let context = stack.context else{
+            ErrorSender.sendError(error: CustomError.failedToLoadContext)
             throw CustomError.failedToLoadContext
         }
         guard let entity =  NSEntityDescription.entity(forEntityName: entityName, in: context) else{
+            ErrorSender.sendError(error: CustomError.failedToLoadEntity)
             throw CustomError.failedToLoadEntity
         }
         let newData = NSManagedObject(entity: entity, insertInto: context)
@@ -134,6 +141,7 @@ struct CoreDataHelper: CoreDataHelperProtocol{
     
     func delete(entity: String, predicate: NSPredicate?, deleteAll: Bool = false) throws{
         guard let context = stack.context else{
+            ErrorSender.sendError(error: CustomError.failedToLoadContext)
             throw CustomError.failedToLoadContext
         }
 
@@ -150,6 +158,7 @@ struct CoreDataHelper: CoreDataHelperProtocol{
     
     func replace<T>(entity: String, predicate: NSPredicate, object: T) throws where T : Decodable, T : Encodable {
         guard let context = stack.context else{
+            ErrorSender.sendError(error: CustomError.failedToLoadContext)
             throw CustomError.failedToLoadContext
         }
         let objects = try get(entityName: entity, predicate: predicate)

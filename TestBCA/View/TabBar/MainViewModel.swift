@@ -21,6 +21,8 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
     @Published var audioPlayerStatus: AudioPlayerStatus = .noAudioIsSelected
     
     @Published var searchText: String = ""
+    @Published var errorMessage: String?
+    @Published var shouldDisplayError: Bool = false
     
     let debouncer: Debouncer = Debouncer(interval: 1)
     
@@ -36,6 +38,7 @@ class MainViewModel: NSObject, ObservableObject, MainViewModelProtocol{
     
     func addObserver(){
         playerManager.notificationManager.addObserver(to: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(displayError(_:)), name: .errorGan, object: nil)
     }
     
     func fetchData() async throws -> [Audio]{
@@ -124,6 +127,28 @@ extension MainViewModel{
         }else{
             isPreviousSongAvailable = false
             isNextSongAvailable = false
+        }
+    }
+    
+    @objc func displayError(_ notification: Notification) {
+        if let error = notification.object as? CustomError{
+            Task{
+                await MainActor.run {
+                    withAnimation {
+                        errorMessage = error.friendlyMessage
+                        shouldDisplayError = true
+                    }
+                }
+                try await Task.sleep(nanoseconds: 500)
+                await MainActor.run {
+                    withAnimation {
+                        shouldDisplayError = false
+                    }
+                }
+                await MainActor.run {
+                    errorMessage = ""
+                }
+            }
         }
     }
 }
