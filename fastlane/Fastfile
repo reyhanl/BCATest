@@ -36,6 +36,7 @@ platform :ios do
   
   desc "Build for testing"
   lane :build_for_testing do
+    setup_ci(force: true)
     build_app(
       scheme: "TestBCA",
       configuration: "Debug",
