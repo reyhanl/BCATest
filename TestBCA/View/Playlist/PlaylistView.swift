@@ -10,7 +10,7 @@ import SwiftUI
 struct PlaylistView<T: PlaylistViewModelProtocol>: View {
     @StateObject var vm: T
     var body: some View {
-        NavigationStack{
+        NavigationView{
             VStack{
                 VStack{
                     ScrollView{
