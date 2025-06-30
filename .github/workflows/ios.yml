@@ -17,9 +17,11 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.2'
-        bundler-cache: true
-        working-directory: .
+        ruby-version: '3.2.6'
+        bundler-cache: false
+
+    - name: Installing Dependencies
+      run: bundle install --verbose
         
     - name: Setup Xcode
       uses: maxim-lobanov/setup-xcode@v1
