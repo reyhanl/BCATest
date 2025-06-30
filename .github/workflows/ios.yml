@@ -19,9 +19,6 @@ jobs:
       with:
         ruby-version: '3.2.6'
         bundler-cache: false
-
-    - name: Installing Dependencies
-      run: bundle install --verbose
         
     - name: Setup Xcode
       uses: maxim-lobanov/setup-xcode@v1
