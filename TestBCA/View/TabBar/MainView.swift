@@ -75,6 +75,19 @@ struct MainView<T: MainViewModelProtocol>: View {
                         .padding(.bottom, safeAreaBottom)
                         .padding(.horizontal, 10)
                         .transition(.move(edge: .bottom))
+                    
+                }
+                if let error = vm.errorMessage{
+                    HStack{
+                        Spacer()
+                        Text(error).font(.system(size: 12)).bold().foregroundStyle(.white)
+                        Spacer()
+                    }
+                    .frame(height: 50)
+                    .background(Color(UIColor.init(red: 171/255, green: 65/255, blue: 65/255, alpha: 1)))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .transition(.move(edge: .bottom))
+                    .animation(.easeInOut, value: vm.shouldDisplayError)
                 }
             }
         }.onAppear {

@@ -15,6 +15,7 @@ protocol HomeViewModelProtocol: ObservableObject{
     var playlists: [PlaylistModel]{get set}
     var audio: Audio?{get set}
     var selectedAudioToAdd: Audio?{get set}
+    var searchError: Error?{get set}
     var audioPlayerStatus: AudioPlayerStatus{get set}
     var isLoadingSearching: Bool{get set}
     var shouldPresentPlaylistModal: Bool{get set}

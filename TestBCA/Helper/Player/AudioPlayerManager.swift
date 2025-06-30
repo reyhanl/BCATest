@@ -114,6 +114,7 @@ class AudioPlayerManager: NSObject, AudioPlayerProtocol{
             let audio = playlist.audios.audios[tempIndex]
             play(audio: audio, withPlaylist: playlist)
         }else{
+            ErrorSender.sendError(error: CustomError.failedToGoToNextAudio)
             throw CustomError.failedToGoToNextAudio
         }
     }
@@ -128,6 +129,7 @@ class AudioPlayerManager: NSObject, AudioPlayerProtocol{
             let audio = playlist.audios.audios[tempIndex]
             play(audio: audio, withPlaylist: playlist)
         }else{
+            ErrorSender.sendError(error: CustomError.failedToGoToPreviousAudio)
             throw CustomError.failedToGoToPreviousAudio
         }
         
