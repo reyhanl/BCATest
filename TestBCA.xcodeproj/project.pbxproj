@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 73;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXContainerItemProxy section */
@@ -253,14 +253,14 @@
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					FCB93B142E10DB18007E806C = {
-						CreatedOnToolsVersion = 16.2;
+						CreatedOnToolsVersion = 14.0;
 					};
 					FCB93B252E10DB1B007E806C = {
-						CreatedOnToolsVersion = 16.2;
+						CreatedOnToolsVersion = 14.0;
 						TestTargetID = FCB93B142E10DB18007E806C;
 					};
 					FCB93B2F2E10DB1B007E806C = {
-						CreatedOnToolsVersion = 16.2;
+						CreatedOnToolsVersion = 14.0;
 						TestTargetID = FCB93B142E10DB18007E806C;
 					};
 				};
