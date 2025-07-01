@@ -5,7 +5,7 @@
 //  Created by reyhan muhammad on 2025/6/30.
 //
 
-struct PlaylistModel: Codable{
+struct PlaylistModel: Identifiable, Codable{
     var playlistName: String
     var id: String
     var audios: Audios
