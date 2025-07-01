@@ -139,14 +139,14 @@ extension MainViewModel{
                         shouldDisplayError = true
                     }
                 }
-                try await Task.sleep(nanoseconds: 500)
+                try await Task.sleep(nanoseconds: 2_000_000_000)
                 await MainActor.run {
                     withAnimation {
                         shouldDisplayError = false
                     }
                 }
                 await MainActor.run {
-                    errorMessage = ""
+                    errorMessage = nil
                 }
             }
         }
