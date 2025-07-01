@@ -2,11 +2,16 @@
 A simple music player App
 
 ## Instalation Guide
+1. Open terminal and type
 ```
 git clone https://github.com/reyhanl/BCATest.git
+cd BCATest
+bundle install
 ```
-1. Clone this repository
-
+2. Run Fastlane
+```
+bundle exec fastlane test
+```
 ## Tech Used
 1. SwiftUI
 2. CoreData
@@ -20,3 +25,6 @@ git clone https://github.com/reyhanl/BCATest.git
 3. Modular instead of Singleton networking layer.
 6. UITest
 7. UnitTest
+
+## Notes
+I don't have the 
