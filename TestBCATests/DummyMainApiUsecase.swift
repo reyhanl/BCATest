@@ -8,6 +8,7 @@
 import Foundation
 
 class DummyPersistenceUsecase: AudioAPIUseCaseProtocol, AudioPersistenceProtocol{
+    
     var persistence: AudioPersistenceProtocol
     
     init(persistence: AudioPersistenceProtocol) {
@@ -22,6 +23,10 @@ class DummyPersistenceUsecase: AudioAPIUseCaseProtocol, AudioPersistenceProtocol
             return audios.filter({$0.title.contains(keyword)})
         }
         return audios
+    }
+    
+    func savePlaylist(playlist: PlaylistModel) async throws {
+        
     }
 }
 

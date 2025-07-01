@@ -8,6 +8,7 @@
 import Foundation
 
 class MockHomePersistence: AudioPersistenceProtocol{
+    
     func loadAudio(keyword: String?) async throws -> [Audio]{
         let reader = JSONReader(bundle: Bundle(for: type(of: self)))
         let audios: [Audio] = try reader.generateDummyFromJSON(fileName: "FourAudioJSON")
@@ -16,6 +17,10 @@ class MockHomePersistence: AudioPersistenceProtocol{
             return audios.filter({$0.title.contains(keyword)})
         }
         return audios
+    }
+    
+    func savePlaylist(playlist: PlaylistModel) async throws {
+        
     }
 }
 

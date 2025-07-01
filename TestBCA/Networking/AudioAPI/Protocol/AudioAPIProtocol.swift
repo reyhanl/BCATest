@@ -10,9 +10,11 @@ protocol AudioAPIUseCaseProtocol{
     var persistence: AudioPersistenceProtocol{get set}
     
     func loadAudio(keyword: String?) async throws -> [Audio]
+    func savePlaylist(playlist: PlaylistModel) async throws
 }
 
 protocol AudioPersistenceProtocol{    
     func loadAudio(keyword: String?) async throws -> [Audio]
+    func savePlaylist(playlist: PlaylistModel) async throws
 }
 

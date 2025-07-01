@@ -29,7 +29,7 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
     @Published var playlists: [PlaylistModel] = []
     
     let debouncer: Debouncer = Debouncer(interval: 1)
-
+    
     init(api: AudioAPIUseCaseProtocol, playlistAPI: PlaylistAPIUseCaseProtocol, playerManager: AudioPlayerProtocol) {
         self.api = api
         self.playlistAPI = playlistAPI
@@ -38,6 +38,11 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
     }
     
     func viewDidLoad(){
+        do{
+            try addDefaultPlaylist()
+        }catch{
+            print("error: \(String(describing: error))")
+        }
         addObserver()
         Task{
             let audios = try await fetchData()
@@ -52,6 +57,20 @@ class HomeViewModel: NSObject, ObservableObject, HomeViewModelProtocol{
     func addObserver(){
         playerManager.notificationManager.addObserver(to: self)
     }
+    
+    func addDefaultPlaylist() throws{
+        let value = UserDefaults.standard.value(forKey: "ALREADYADDPLAYLIST") as? Bool
+        guard value == nil || value == false else{return}
+        let reader = JSONReader(bundle: Bundle(for: type(of: self)))
+        let playlists: [PlaylistModel] = try reader.generateDummyFromJSON(fileName: "DefaultPlaylist")
+        Task{
+            for playlist in playlists {
+                try await api.savePlaylist(playlist: playlist)
+            }
+            UserDefaults.standard.set(true, forKey: "ALREADYADDPLAYLIST")
+        }
+    }
+
     
     func fetchData() async throws -> [Audio]{
         await MainActor.run {

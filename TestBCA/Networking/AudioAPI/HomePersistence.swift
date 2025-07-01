@@ -8,6 +8,7 @@
 import Foundation
 
 class AudioRemotePersistence: AudioPersistenceProtocol{
+    
     var executor: any APIExecutorProtocol
     
     init(executor: any APIExecutorProtocol = Executor()) {
@@ -28,6 +29,11 @@ class AudioRemotePersistence: AudioPersistenceProtocol{
         let res = try decoder.decode(AudioResponse.self, from: data)
         return res.results
     }
+    
+    func savePlaylist(playlist: PlaylistModel) async throws {
+        let helper = CoreDataHelper(stack: .init(name: "Data"))
+        try helper.save(entity: "Playlist", object: playlist)
+    }
 }
 
 class AudioLocalPersistence: AudioPersistenceProtocol{
@@ -38,5 +44,9 @@ class AudioLocalPersistence: AudioPersistenceProtocol{
     func loadAudio(keyword: String?) async throws -> [Audio] {
         //TODO: Implement local storage if necessary
         return []
+    }
+    
+    func savePlaylist(playlist: PlaylistModel) async throws {
+        
     }
 }

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 73;
 	objects = {
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +108,7 @@
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			buildPhase = FCB93B112E10DB18007E806C /* Sources */;
 			membershipExceptions = (
+				DefaultPlaylist.json,
 				DummyJson.json,
 			);
 		};

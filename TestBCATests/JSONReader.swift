@@ -23,7 +23,7 @@ struct JSONReader{
     }
     
     func readJSON(fileName: String) throws -> String{
-        if let path = Bundle(for: DummyPersistenceUsecase.self).path(forResource: fileName, ofType: "json"){
+        if let path = bundle.path(forResource: fileName, ofType: "json"){
             do{
                 let url = URL(fileURLWithPath: path)
                 let data = try Data(contentsOf: url)

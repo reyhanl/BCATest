@@ -16,6 +16,10 @@ class AudioPersistenceUsecase: AudioAPIUseCaseProtocol{
     func loadAudio(keyword: String?) async throws -> [Audio]{
         try await persistence.loadAudio(keyword: keyword)
     }
+    
+    func savePlaylist(playlist: PlaylistModel) async throws {
+        try await persistence.savePlaylist(playlist: playlist)
+    }
 }
 
 class MockAudioPersistenceUsecase: AudioAPIUseCaseProtocol{
@@ -27,6 +31,10 @@ class MockAudioPersistenceUsecase: AudioAPIUseCaseProtocol{
     
     func loadAudio(keyword: String?) async throws -> [Audio]{
         try await persistence.loadAudio(keyword: keyword)
+    }
+    
+    func savePlaylist(playlist: PlaylistModel) async throws {
+        try await persistence.savePlaylist(playlist: playlist)
     }
 }
 
